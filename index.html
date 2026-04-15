@@ -65,6 +65,35 @@
 
     <main>
         <h2>Due Date Calculator</h2>
+        
+        <!-- =====================
+     DUE DATE CALCULATOR
+     Calculates EDD from LMP, Ultrasound, or ART transfer date
+     All calculations happen locally - no data leaves the device
+     ===================== -->
+        
+        <section class="calculator-card">
+    
+    <!-- Section for LMP-based dating -->
+    <!-- Formula: LMP + 280 days = EDD -->
+        <h3>From LMP</h3>
+    
+    <!-- Label is linked to input via matching "for" and "id" attributes -->
+    <!-- This improves accessibility - tapping the label focuses the input -->
+        <label for="lmp-date">Last Menstrual Period</label>
+    
+    <!-- type="date" gives us a native date picker on mobile -->
+        <input 
+            type="date" 
+            id="lmp-date">
+    
+    <!-- onclick tells the button what JavaScript function to run -->
+        <button onclick="calculateLMP()">Calculate</button>
+    
+    <!-- Empty container - JavaScript will write results here -->
+        <div id="lmp-result"></div>
+
+</section>
     </main>
 
 </body>
