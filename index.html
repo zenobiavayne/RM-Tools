@@ -237,5 +237,71 @@
 </section>
     </main>
 
+<script>
+
+// =====================
+// HELPER FUNCTIONS
+// Small reusable tools that the main functions will use
+// =====================
+
+// Calculates gestational age in weeks and days between two dates
+// Returns an object with weeks and days as separate numbers
+function getGestationalAge(lmpDate, today) {
+    // Total difference in milliseconds, converted to days
+    const totalDays = Math.floor((today - lmpDate) / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(totalDays / 7);
+    const days = totalDays % 7;
+    return { weeks, days };
+}
+
+// Formats a date object into a readable string like "January 1, 2025"
+function formatDate(date) {
+    return date.toLocaleDateString('en-CA', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+// =====================
+// LMP CALCULATION
+// Formula: LMP + 280 days = EDD
+// =====================
+
+function calculateLMP() {
+    // Grab the value from the input field using its id
+    const input = document.getElementById('lmp-date').value;
+
+    // Check if the user actually entered a date
+    if (!input) {
+        document.getElementById('lmp-result').innerHTML = `
+            <div class="flag">⚠ Please enter an LMP date.</div>
+        `;
+        return;
+    }
+
+    // Parse the input into a JavaScript date object
+    // We add T12:00:00 to avoid timezone issues that can shift the date by one day
+    const lmp = new Date(input + 'T12:00:00');
+
+    // Calculate EDD by adding 280 days in milliseconds
+    const edd = new Date(lmp.getTime() + 280 * 24 * 60 * 60 * 1000);
+
+    // Calculate gestational age as of today
+    const today = new Date();
+    const ga = getGestationalAge(lmp, today);
+
+    // Write the result into the result container
+    document.getElementById('lmp-result').innerHTML = `
+        <div class="result">
+            <p>Estimated Due Date</p>
+            <p class="edd">${formatDate(edd)}</p>
+            <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
+        </div>
+    `;
+}
+
+</script>
+    
 </body>
 </html>
