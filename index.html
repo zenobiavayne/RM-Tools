@@ -57,6 +57,36 @@
       }
 
       /* =====================
+   SELECTOR CONTAINER
+   Dating method dropdown
+   ===================== */
+
+      .selector-container {
+        margin-bottom: 24px;
+      }
+
+      select {
+        width: 100%;
+        background-color: var(--surface);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 16px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+        color-scheme: dark;
+        /* Remove default browser styling */
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      /* =====================
    CALCULATOR CARDS
    Each dating method gets its own card
    ===================== */
@@ -207,31 +237,106 @@
     </header>
 
     <main>
+      <!-- =====================
+         DUE DATE CALCULATOR
+         Province selector and dating method selector
+         live here, cards show/hide based on selection
+         ===================== -->
+
       <h2>Due Date Calculator</h2>
 
-      <!-- =====================
-     DUE DATE CALCULATOR
-     Calculates EDD from LMP, Ultrasound, or ART transfer date
-     All calculations happen locally - no data leaves the device
-     ===================== -->
+      <!-- Dating method selector -->
+      <!-- This dropdown controls which input card is visible -->
+      <div class="selector-container">
+        <label for="dating-method">Dating Method</label>
+        <select id="dating-method" onchange="showDateCard()">
+          <option value="">Select a method...</option>
+          <option value="lmp">From LMP</option>
+          <option value="ultrasound">From Ultrasound</option>
+          <option value="art">From ART Transfer</option>
+        </select>
+      </div>
 
-      <section class="calculator-card">
-        <!-- Section for LMP-based dating -->
-        <!-- Formula: LMP + 280 days = EDD -->
+      <!-- LMP Card -->
+      <!-- Hidden by default, shown when LMP is selected -->
+      <section class="calculator-card" id="card-lmp" style="display: none">
         <h3>From LMP</h3>
 
-        <!-- Label is linked to input via matching "for" and "id" attributes -->
-        <!-- This improves accessibility - tapping the label focuses the input -->
+        <!-- Formula: LMP + 280 days = EDD -->
         <label for="lmp-date">Last Menstrual Period</label>
-
-        <!-- type="date" gives us a native date picker on mobile -->
         <input type="date" id="lmp-date" />
 
-        <!-- onclick tells the button what JavaScript function to run -->
         <button onclick="calculateLMP()">Calculate</button>
 
         <!-- Empty container - JavaScript will write results here -->
         <div id="lmp-result"></div>
+      </section>
+
+      <!-- Ultrasound Card -->
+      <!-- Hidden by default, shown when Ultrasound is selected -->
+      <section
+        class="calculator-card"
+        id="card-ultrasound"
+        style="display: none"
+      >
+        <h3>From Ultrasound</h3>
+
+        <!-- We need two inputs - the date of the scan and the GA at the time -->
+        <label for="us-date">Ultrasound Date</label>
+        <input type="date" id="us-date" />
+
+        <label for="us-weeks">Gestational Age at Scan</label>
+
+        <!-- Side by side inputs for weeks and days -->
+        <div class="ga-input-row">
+          <div class="ga-input-group">
+            <input
+              type="number"
+              id="us-weeks"
+              min="0"
+              max="42"
+              placeholder="Weeks"
+            />
+            <span class="ga-label">weeks</span>
+          </div>
+          <div class="ga-input-group">
+            <input
+              type="number"
+              id="us-days"
+              min="0"
+              max="6"
+              placeholder="Days"
+            />
+            <span class="ga-label">days</span>
+          </div>
+        </div>
+
+        <button onclick="calculateUS()">Calculate</button>
+
+        <!-- Empty container - JavaScript will write results here -->
+        <div id="us-result"></div>
+      </section>
+
+      <!-- ART Card -->
+      <!-- Hidden by default, shown when ART is selected -->
+      <section class="calculator-card" id="card-art" style="display: none">
+        <h3>From ART Transfer</h3>
+
+        <label for="art-date">Transfer Date</label>
+        <input type="date" id="art-date" />
+
+        <!-- Day 3 vs Day 5 selector -->
+        <!-- This changes the formula: Day 5 + 261 days, Day 3 + 263 days -->
+        <label for="art-type">Embryo Type</label>
+        <select id="art-type">
+          <option value="5">Day 5 embryo</option>
+          <option value="3">Day 3 embryo</option>
+        </select>
+
+        <button onclick="calculateART()">Calculate</button>
+
+        <!-- Empty container - JavaScript will write results here -->
+        <div id="art-result"></div>
       </section>
     </main>
 
@@ -258,6 +363,32 @@
           month: "long",
           day: "numeric",
         });
+      }
+
+      // =====================
+      // SHOW/HIDE CARDS
+      // Reveals the correct input card based on dropdown selection
+      // Hides all other cards first, then shows the selected one
+      // =====================
+
+      function showDateCard() {
+        // Get the selected value from the dropdown
+        const method = document.getElementById("dating-method").value;
+
+        // Hide all cards first
+        // We always reset before showing, so only one card is ever visible
+        document.getElementById("card-lmp").style.display = "none";
+        document.getElementById("card-ultrasound").style.display = "none";
+        document.getElementById("card-art").style.display = "none";
+
+        // Show the selected card
+        if (method === "lmp") {
+          document.getElementById("card-lmp").style.display = "block";
+        } else if (method === "ultrasound") {
+          document.getElementById("card-ultrasound").style.display = "block";
+        } else if (method === "art") {
+          document.getElementById("card-art").style.display = "block";
+        }
       }
 
       // =====================
