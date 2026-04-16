@@ -34,12 +34,37 @@
         background-color: var(--surface);
         border-bottom: 2px solid var(--accent);
         padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       }
 
       header h1 {
         color: var(--accent);
         font-size: 1.5rem;
         letter-spacing: 0.05em;
+      }
+
+      /* Clear button - outlined rather than filled so it's less dominant */
+      .clear-btn {
+        width: auto;
+        background-color: transparent;
+        color: var(--flag);
+        border: 1px solid var(--flag);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+      }
+
+      .clear-btn:hover {
+        background-color: var(--flag);
+        color: #1a1a2e;
+      }
+
+      .clear-btn:active {
+        transform: scale(0.98);
       }
 
       main {
@@ -65,24 +90,44 @@
         margin-bottom: 24px;
       }
 
-      select {
-        width: 100%;
-        background-color: var(--surface);
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 14px 16px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: border-color 0.2s ease;
-        color-scheme: dark;
-        /* Remove default browser styling */
-        -webkit-appearance: none;
-        appearance: none;
+      /* =====================
+   SEGMENTED CONTROL
+   Three side-by-side buttons for dating method selection
+   ===================== */
+
+      .segmented-control {
+        display: flex;
+        gap: 8px;
       }
 
-      select:focus {
-        outline: none;
+      .segment-btn {
+        /* Override the default button styles */
+        flex: 1;
+        width: auto;
+        background-color: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+      }
+
+      .segment-btn:hover {
+        border-color: var(--accent);
+        color: var(--text-primary);
+        background-color: transparent;
+      }
+
+      .segment-btn:active {
+        transform: scale(0.98);
+      }
+
+      /* Active state - glows amber when selected */
+      .segment-btn.active {
+        background-color: var(--accent);
+        color: #1a1a2e;
         border-color: var(--accent);
       }
 
@@ -229,11 +274,74 @@
         color: var(--flag);
         font-size: 0.85rem;
       }
+
+      /* =====================
+   GESTATIONAL AGE ROW
+   Weeks and days inputs sit side by side
+   ===================== */
+
+      .ga-input-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .ga-input-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .ga-input-group input {
+        margin-bottom: 4px;
+      }
+
+      /* Match ga-label style to our regular labels */
+      .ga-label {
+        display: block;
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      /* =====================
+   EMBRYO TYPE SELECTOR
+   Dropdown within ART card for Day 3 vs Day 5 selection
+   ===================== */
+
+      #art-type {
+        width: 100%;
+        background-color: var(--bg);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 16px;
+        font-size: 1rem;
+        margin-bottom: 16px;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+        color-scheme: dark;
+        -webkit-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        padding-right: 40px;
+      }
+
+      #art-type:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
     </style>
   </head>
   <body>
     <header>
       <h1>RM Tools</h1>
+      <button class="clear-btn" onclick="clearAll()">Clear</button>
     </header>
 
     <main>
@@ -245,16 +353,32 @@
 
       <h2>Due Date Calculator</h2>
 
-      <!-- Dating method selector -->
-      <!-- This dropdown controls which input card is visible -->
+      <!-- =====================
+     DATING METHOD SELECTOR
+     Segmented control - one tap to switch between methods
+     Active button glows amber, inactive buttons are outlined
+     ===================== -->
       <div class="selector-container">
-        <label for="dating-method">Dating Method</label>
-        <select id="dating-method" onchange="showDateCard()">
-          <option value="">Select a method...</option>
-          <option value="lmp">From LMP</option>
-          <option value="ultrasound">From Ultrasound</option>
-          <option value="art">From ART Transfer</option>
-        </select>
+        <label>Dating Method</label>
+        <div class="segmented-control">
+          <button
+            class="segment-btn"
+            id="btn-lmp"
+            onclick="showDateCard('lmp')"
+          >
+            LMP
+          </button>
+          <button class="segment-btn" id="btn-us" onclick="showDateCard('us')">
+            US
+          </button>
+          <button
+            class="segment-btn"
+            id="btn-art"
+            onclick="showDateCard('art')"
+          >
+            ART
+          </button>
+        </div>
       </div>
 
       <!-- LMP Card -->
@@ -342,6 +466,16 @@
 
     <script>
       // =====================
+      // SHARED STATE
+      // Stores EDDs from each method so they can be compared
+      // =====================
+      const calculatedEDDs = {
+        lmp: null,
+        ultrasound: null,
+        art: null
+      };
+
+      // =====================
       // HELPER FUNCTIONS
       // Small reusable tools that the main functions will use
       // =====================
@@ -361,7 +495,7 @@
         return date.toLocaleDateString("en-CA", {
           year: "numeric",
           month: "long",
-          day: "numeric",
+          day: "numeric"
         });
       }
 
@@ -371,24 +505,63 @@
       // Hides all other cards first, then shows the selected one
       // =====================
 
-      function showDateCard() {
-        // Get the selected value from the dropdown
-        const method = document.getElementById("dating-method").value;
-
-        // Hide all cards first
-        // We always reset before showing, so only one card is ever visible
+      function showDateCard(method) {
+        // Hide all cards
         document.getElementById("card-lmp").style.display = "none";
         document.getElementById("card-ultrasound").style.display = "none";
         document.getElementById("card-art").style.display = "none";
 
-        // Show the selected card
+        // Remove active class from all buttons
+        document.getElementById("btn-lmp").classList.remove("active");
+        document.getElementById("btn-us").classList.remove("active");
+        document.getElementById("btn-art").classList.remove("active");
+
+        // Show selected card and activate button
         if (method === "lmp") {
           document.getElementById("card-lmp").style.display = "block";
-        } else if (method === "ultrasound") {
+          document.getElementById("btn-lmp").classList.add("active");
+        } else if (method === "us") {
           document.getElementById("card-ultrasound").style.display = "block";
+          document.getElementById("btn-us").classList.add("active");
         } else if (method === "art") {
           document.getElementById("card-art").style.display = "block";
+          document.getElementById("btn-art").classList.add("active");
         }
+      }
+
+      // =====================
+      // CLEAR ALL
+      // Resets entire app to fresh state for new patient
+      // One tap, no confirmation - designed for quick chairside use
+      // =====================
+
+      function clearAll() {
+        // Reset shared state
+        calculatedEDDs.lmp = null;
+        calculatedEDDs.ultrasound = null;
+        calculatedEDDs.art = null;
+
+        // Clear all input fields
+        document.getElementById("lmp-date").value = "";
+        document.getElementById("us-date").value = "";
+        document.getElementById("us-weeks").value = "";
+        document.getElementById("us-days").value = "";
+        document.getElementById("art-date").value = "";
+
+        // Clear all result containers
+        document.getElementById("lmp-result").innerHTML = "";
+        document.getElementById("us-result").innerHTML = "";
+        document.getElementById("art-result").innerHTML = "";
+
+        // Hide all cards
+        document.getElementById("card-lmp").style.display = "none";
+        document.getElementById("card-ultrasound").style.display = "none";
+        document.getElementById("card-art").style.display = "none";
+
+        // Reset all segment buttons to inactive
+        document.getElementById("btn-lmp").classList.remove("active");
+        document.getElementById("btn-us").classList.remove("active");
+        document.getElementById("btn-art").classList.remove("active");
       }
 
       // =====================
@@ -421,6 +594,110 @@
 
         // Write the result into the result container
         document.getElementById("lmp-result").innerHTML = `
+        <div class="result">
+            <p>Estimated Due Date</p>
+            <p class="edd">${formatDate(edd)}</p>
+            <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
+        </div>
+    `;
+      }
+
+      // =====================
+      // ULTRASOUND CALCULATION
+      // Formula: scan date + (280 - GA in days at scan) = EDD
+      // =====================
+
+      function calculateUS() {
+        // Grab all three inputs
+        const usDateInput = document.getElementById("us-date").value;
+        const weeksInput = document.getElementById("us-weeks").value;
+        const daysInput = document.getElementById("us-days").value;
+
+        // Check that all fields are filled
+        if (!usDateInput || weeksInput === "" || daysInput === "") {
+          document.getElementById("us-result").innerHTML = `
+            <div class="flag">⚠ Please enter the ultrasound date and gestational age.</div>
+        `;
+          return;
+        }
+
+        // Parse the scan date
+        const scanDate = new Date(usDateInput + "T12:00:00");
+
+        // Convert GA at scan to total days - exactly your mental math
+        const gaAtScanDays = parseInt(weeksInput) * 7 + parseInt(daysInput);
+
+        // Days remaining until EDD from scan date
+        const daysRemaining = 280 - gaAtScanDays;
+
+        // Calculate EDD - scan date + remaining days
+        const edd = new Date(
+          scanDate.getTime() + daysRemaining * 24 * 60 * 60 * 1000
+        );
+
+        // Calculate GA today
+        // We need the "corrected LMP" - work backwards from scan date
+        const correctedLMP = new Date(
+          scanDate.getTime() - gaAtScanDays * 24 * 60 * 60 * 1000
+        );
+        const today = new Date();
+        const ga = getGestationalAge(correctedLMP, today);
+
+        // Write results
+        document.getElementById("us-result").innerHTML = `
+        <div class="result">
+            <p>Estimated Due Date</p>
+            <p class="edd">${formatDate(edd)}</p>
+            <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
+        </div>
+    `;
+      }
+
+      // =====================
+      // ART Calculation
+      // Formula: transfer date + (266 - embryo age in days) = EDD
+      // =====================
+
+      function calculateART() {
+        // Grab the Embryo Age Input
+        const embryoAgeInput = document.getElementById("art-type").value;
+        const transferDateInput = document.getElementById("art-date").value;
+
+        // Check that all fields are filled
+        if (!transferDateInput) {
+          document.getElementById("art-result").innerHTML = `
+            <div class="flag">⚠ Please select the embryo age and date of transfer.</div>
+        `;
+          return;
+        }
+
+        // Parse the Transfer Date
+        const transferDate = new Date(transferDateInput + "T12:00:00");
+
+        // Set the Embryo Type based on the selection of the user
+        let daysToAdd;
+        if (embryoAgeInput === "5") {
+          daysToAdd = 261;
+        } else {
+          daysToAdd = 263;
+        }
+
+        // Calculate the EDD based on scanDate plus days to add
+
+        const edd = new Date(
+          transferDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000
+        );
+
+        // calculate the current gestation
+
+        const correctedLMP = new Date(
+          edd.getTime() - 280 * 24 * 60 * 60 * 1000
+        );
+        const today = new Date();
+        const ga = getGestationalAge(correctedLMP, today);
+
+        // Write results
+        document.getElementById("art-result").innerHTML = `
         <div class="result">
             <p>Estimated Due Date</p>
             <p class="edd">${formatDate(edd)}</p>
