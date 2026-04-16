@@ -90,28 +90,44 @@
         margin-bottom: 24px;
       }
 
-      select {
-        width: 100%;
-        background-color: var(--surface);
-        color: var(--text-primary);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 14px 16px;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: border-color 0.2s ease;
-        color-scheme: dark;
-        /* Remove default browser styling */
-        -webkit-appearance: none;
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 16px center;
-        padding-right: 40px;
+      /* =====================
+   SEGMENTED CONTROL
+   Three side-by-side buttons for dating method selection
+   ===================== */
+
+      .segmented-control {
+        display: flex;
+        gap: 8px;
       }
 
-      select:focus {
-        outline: none;
+      .segment-btn {
+        /* Override the default button styles */
+        flex: 1;
+        width: auto;
+        background-color: transparent;
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+      }
+
+      .segment-btn:hover {
+        border-color: var(--accent);
+        color: var(--text-primary);
+        background-color: transparent;
+      }
+
+      .segment-btn:active {
+        transform: scale(0.98);
+      }
+
+      /* Active state - glows amber when selected */
+      .segment-btn.active {
+        background-color: var(--accent);
+        color: #1a1a2e;
         border-color: var(--accent);
       }
 
@@ -290,6 +306,36 @@
         text-transform: uppercase;
         margin-bottom: 6px;
       }
+
+      /* =====================
+   EMBRYO TYPE SELECTOR
+   Dropdown within ART card for Day 3 vs Day 5 selection
+   ===================== */
+
+      #art-type {
+        width: 100%;
+        background-color: var(--bg);
+        color: var(--text-primary);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 16px;
+        font-size: 1rem;
+        margin-bottom: 16px;
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+        color-scheme: dark;
+        -webkit-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        padding-right: 40px;
+      }
+
+      #art-type:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
     </style>
   </head>
   <body>
@@ -307,16 +353,32 @@
 
       <h2>Due Date Calculator</h2>
 
-      <!-- Dating method selector -->
-      <!-- This dropdown controls which input card is visible -->
+      <!-- =====================
+     DATING METHOD SELECTOR
+     Segmented control - one tap to switch between methods
+     Active button glows amber, inactive buttons are outlined
+     ===================== -->
       <div class="selector-container">
-        <label for="dating-method">Dating Method</label>
-        <select id="dating-method" onchange="showDateCard()">
-          <option value="">Select a method...</option>
-          <option value="lmp">From LMP</option>
-          <option value="ultrasound">From Ultrasound</option>
-          <option value="art">From ART Transfer</option>
-        </select>
+        <label>Dating Method</label>
+        <div class="segmented-control">
+          <button
+            class="segment-btn"
+            id="btn-lmp"
+            onclick="showDateCard('lmp')"
+          >
+            LMP
+          </button>
+          <button class="segment-btn" id="btn-us" onclick="showDateCard('us')">
+            US
+          </button>
+          <button
+            class="segment-btn"
+            id="btn-art"
+            onclick="showDateCard('art')"
+          >
+            ART
+          </button>
+        </div>
       </div>
 
       <!-- LMP Card -->
@@ -443,24 +505,63 @@
       // Hides all other cards first, then shows the selected one
       // =====================
 
-      function showDateCard() {
-        // Get the selected value from the dropdown
-        const method = document.getElementById("dating-method").value;
-
-        // Hide all cards first
-        // We always reset before showing, so only one card is ever visible
+      function showDateCard(method) {
+        // Hide all cards
         document.getElementById("card-lmp").style.display = "none";
         document.getElementById("card-ultrasound").style.display = "none";
         document.getElementById("card-art").style.display = "none";
 
-        // Show the selected card
+        // Remove active class from all buttons
+        document.getElementById("btn-lmp").classList.remove("active");
+        document.getElementById("btn-us").classList.remove("active");
+        document.getElementById("btn-art").classList.remove("active");
+
+        // Show selected card and activate button
         if (method === "lmp") {
           document.getElementById("card-lmp").style.display = "block";
-        } else if (method === "ultrasound") {
+          document.getElementById("btn-lmp").classList.add("active");
+        } else if (method === "us") {
           document.getElementById("card-ultrasound").style.display = "block";
+          document.getElementById("btn-us").classList.add("active");
         } else if (method === "art") {
           document.getElementById("card-art").style.display = "block";
+          document.getElementById("btn-art").classList.add("active");
         }
+      }
+
+      // =====================
+      // CLEAR ALL
+      // Resets entire app to fresh state for new patient
+      // One tap, no confirmation - designed for quick chairside use
+      // =====================
+
+      function clearAll() {
+        // Reset shared state
+        calculatedEDDs.lmp = null;
+        calculatedEDDs.ultrasound = null;
+        calculatedEDDs.art = null;
+
+        // Clear all input fields
+        document.getElementById("lmp-date").value = "";
+        document.getElementById("us-date").value = "";
+        document.getElementById("us-weeks").value = "";
+        document.getElementById("us-days").value = "";
+        document.getElementById("art-date").value = "";
+
+        // Clear all result containers
+        document.getElementById("lmp-result").innerHTML = "";
+        document.getElementById("us-result").innerHTML = "";
+        document.getElementById("art-result").innerHTML = "";
+
+        // Hide all cards
+        document.getElementById("card-lmp").style.display = "none";
+        document.getElementById("card-ultrasound").style.display = "none";
+        document.getElementById("card-art").style.display = "none";
+
+        // Reset all segment buttons to inactive
+        document.getElementById("btn-lmp").classList.remove("active");
+        document.getElementById("btn-us").classList.remove("active");
+        document.getElementById("btn-art").classList.remove("active");
       }
 
       // =====================
