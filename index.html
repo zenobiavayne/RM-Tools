@@ -336,6 +336,60 @@
         outline: none;
         border-color: var(--accent);
       }
+
+      /* =====================
+   RESULTS SECTION
+   Persistent accumulated results below the cards
+   ===================== */
+
+      .results-section {
+        background-color: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 8px;
+      }
+
+      .results-section h3 {
+        color: var(--accent);
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .result-row {
+        display: grid;
+        grid-template-columns: minmax(80px, 120px) 1fr auto;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+        gap: 8px;
+      }
+
+      .result-row:last-of-type {
+        border-bottom: none;
+      }
+
+      .result-row .method {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .result-row .edd-date {
+        color: var(--text-primary);
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .result-row .ga-today {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+      }
     </style>
   </head>
   <body>
@@ -462,6 +516,24 @@
         <!-- Empty container - JavaScript will write results here -->
         <div id="art-result"></div>
       </section>
+
+      <!-- =====================
+     CALCULATED DATES
+     Persistent results section - always visible
+     Accumulates EDDs as each method is calculated
+     Discrepancy flags appear here when relevant
+     ===================== -->
+      <section
+        class="results-section"
+        id="results-section"
+        style="display: none"
+      >
+        <h3>Calculated Dates</h3>
+        <div id="results-lmp"></div>
+        <div id="results-us"></div>
+        <div id="results-art"></div>
+        <div id="discrepancy-flag"></div>
+      </section>
     </main>
 
     <script>
@@ -530,6 +602,83 @@
       }
 
       // =====================
+      // CHECK DISCREPANCIES
+      // Compares EDDs from different methods and flags significant differences
+      // Called after every calculation
+      // Thresholds: T1 > 7 days, T2 > 10 days, T3 blanket warning
+      // LMP vs ART never compared - clinically meaningless
+      // =====================
+
+      function checkDiscrepancies() {
+        const flagContainer = document.getElementById("discrepancy-flag");
+        flagContainer.innerHTML = "";
+
+        // Need at least two comparable EDDs to check
+        // Valid comparisons: LMP vs US, ART vs US
+        const hasLMPandUS = calculatedEDDs.lmp && calculatedEDDs.ultrasound;
+        const hasARTandUS = calculatedEDDs.art && calculatedEDDs.ultrasound;
+
+        if (!hasLMPandUS && !hasARTandUS) return;
+
+        // Determine trimester from US GA if available, otherwise LMP
+        // US is most reliable for trimester determination
+        const referenceEDD = calculatedEDDs.ultrasound || calculatedEDDs.lmp;
+        const correctedLMP = new Date(
+          referenceEDD.getTime() - 280 * 24 * 60 * 60 * 1000
+        );
+        const today = new Date();
+        const ga = getGestationalAge(correctedLMP, today);
+        const totalWeeks = ga.weeks;
+
+        // T3 blanket warning - dating unreliable regardless of discrepancy
+        if (totalWeeks >= 28) {
+          flagContainer.innerHTML = `
+            <div class="flag">
+                ⚠ Third trimester dating is not reliable for establishing EDD. 
+                Exercise clinical judgement.
+            </div>
+        `;
+          return;
+        }
+
+        // Set threshold based on trimester
+        const threshold = totalWeeks < 14 ? 7 : 10;
+        const trimester = totalWeeks < 14 ? "first" : "second";
+
+        // Check each valid comparison
+        let discrepancyFound = false;
+
+        if (hasLMPandUS) {
+          const diffMs = Math.abs(
+            calculatedEDDs.lmp.getTime() - calculatedEDDs.ultrasound.getTime()
+          );
+          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          if (diffDays > threshold) {
+            discrepancyFound = true;
+          }
+        }
+
+        if (hasARTandUS) {
+          const diffMs = Math.abs(
+            calculatedEDDs.art.getTime() - calculatedEDDs.ultrasound.getTime()
+          );
+          const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+          if (diffDays > threshold) {
+            discrepancyFound = true;
+          }
+        }
+
+        // Show flag if discrepancy found
+        if (discrepancyFound) {
+          flagContainer.innerHTML = `
+            <div class="flag">
+                ⚠ Date discrepancy detected in the ${trimester} trimester 
+                (threshold: ${threshold} days). Review and use clinical judgement.
+            </div>
+        `;
+        }
+      }
+      // =====================
       // CLEAR ALL
       // Resets entire app to fresh state for new patient
       // One tap, no confirmation - designed for quick chairside use
@@ -562,6 +711,15 @@
         document.getElementById("btn-lmp").classList.remove("active");
         document.getElementById("btn-us").classList.remove("active");
         document.getElementById("btn-art").classList.remove("active");
+
+        // Clear persistent results section
+        document.getElementById("results-lmp").innerHTML = "";
+        document.getElementById("results-us").innerHTML = "";
+        document.getElementById("results-art").innerHTML = "";
+        document.getElementById("discrepancy-flag").innerHTML = "";
+
+        // Hide results section until next calculation
+        document.getElementById("results-section").style.display = "none";
       }
 
       // =====================
@@ -600,6 +758,22 @@
             <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
         </div>
     `;
+
+        // Write to persistent results section
+        calculatedEDDs.lmp = edd;
+        document.getElementById("results-lmp").innerHTML = `
+          <div class="result-row">
+            <span class="method">EDD by LMP</span>
+            <span class="edd-date">${formatDate(edd)}</span>
+            <span class="ga-today">${ga.weeks}w${ga.days}d</span>
+          </div>
+`;
+
+        // Show results section
+        document.getElementById("results-section").style.display = "block";
+
+        // Check for discrepancies
+        checkDiscrepancies();
       }
 
       // =====================
@@ -651,6 +825,22 @@
             <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
         </div>
     `;
+
+        // Write to persistent results section
+        calculatedEDDs.ultrasound = edd;
+        document.getElementById("results-us").innerHTML = `
+          <div class="result-row">
+              <span class="method">EDD by US</span>
+              <span class="edd-date">${formatDate(edd)}</span>
+              <span class="ga-today">${ga.weeks}w${ga.days}d</span>
+          </div>
+`;
+
+        // Show results section
+        document.getElementById("results-section").style.display = "block";
+
+        // Check for discrepancies
+        checkDiscrepancies();
       }
 
       // =====================
@@ -704,6 +894,22 @@
             <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
         </div>
     `;
+
+        // Write to persistent results section
+        calculatedEDDs.art = edd;
+        document.getElementById("results-art").innerHTML = `
+          <div class="result-row">
+              <span class="method">EDD by ART</span>
+              <span class="edd-date">${formatDate(edd)}</span>
+              <span class="ga-today">${ga.weeks}w${ga.days}d</span>
+          </div>
+`;
+
+        // Show results section
+        document.getElementById("results-section").style.display = "block";
+
+        // Check for discrepancies
+        checkDiscrepancies();
       }
     </script>
   </body>
