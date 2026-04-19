@@ -5,543 +5,553 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RM Tools | Midwifery Clinical Calculator</title>
     <style>
-                           :root {
-                             --bg: #1e1e2e;
-                             --surface: #2a2a3e;
-                             --accent: #f59e0b;
-                             --accent-hover: #d97706;
-                             --text-primary: #f1f5f9;
-                             --text-secondary: #94a3b8;
-                             --flag: #fb923c;
-                             --border: #3a3a5c;
-                           }
+          :root {
+            --bg: #1e1e2e;
+            --surface: #2a2a3e;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --flag: #fb923c;
+            --border: #3a3a5c;
+          }
 
-                           * {
-                             margin: 0;
-                             padding: 0;
-                             box-sizing: border-box;
-                           }
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
 
-                           body {
-                             background-color: var(--bg);
-                             color: var(--text-primary);
-                             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                             font-size: 16px;
-                             line-height: 1.5;
-                           }
+          body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+          }
 
-                           header {
-                             background-color: var(--surface);
-                             border-bottom: 2px solid var(--accent);
-                             padding: 16px 20px;
-                             display: flex;
-                             justify-content: space-between;
-                             align-items: center;
-                           }
+          header {
+            background-color: var(--surface);
+            border-bottom: 2px solid var(--accent);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
 
-                           header h1 {
-                             color: var(--accent);
-                             font-size: 1.5rem;
-                             letter-spacing: 0.05em;
-                           }
+          header h1 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+          }
 
-                           /* Clear button - outlined rather than filled so it's less dominant */
-                           .clear-btn {
-                             width: auto;
-                             background-color: transparent;
-                             color: var(--flag);
-                             border: 1px solid var(--flag);
-                             border-radius: 8px;
-                             padding: 8px 16px;
-                             font-size: 0.85rem;
-                             font-weight: 600;
-                             letter-spacing: 0.05em;
-                           }
+          /* Clear button - outlined rather than filled so it's less dominant */
+          .clear-btn {
+            width: auto;
+            background-color: transparent;
+            color: var(--flag);
+            border: 1px solid var(--flag);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+          }
 
-                           .clear-btn:hover {
-                             background-color: var(--flag);
-                             color: #1a1a2e;
-                           }
+          .clear-btn:hover {
+            background-color: var(--flag);
+            color: #1a1a2e;
+          }
 
-                           .clear-btn:active {
-                             transform: scale(0.98);
-                           }
+          .clear-btn:active {
+            transform: scale(0.98);
+          }
 
-                           .header-controls {
-                             display: flex;
-                             align-items: center;
-                             gap: 10px;
-                           }
+          .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
 
-                           #province-selector {
-                             background-color: transparent;
-                             color: var(--accent);
-                             border: 1px solid var(--accent);
-                             border-radius: 8px;
-                             padding: 6px 28px 6px 10px;
-                             font-size: 0.85rem;
-                             font-weight: 600;
-                             cursor: pointer;
-                             -webkit-appearance: none;
-                             appearance: none;
-                             color-scheme: dark;
-                             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-                             background-repeat: no-repeat;
-                             background-position: right 8px center;
-                           }
+          #province-selector {
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 6px 28px 6px 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            color-scheme: dark;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+          }
 
-                           main {
-                             padding: 20px;
-                             max-width: 600px;
-                             margin: 0 auto;
-                           }
+          main {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+          }
 
-                           h2 {
-                             color: var(--text-primary);
-                             font-size: 1.1rem;
-                             margin-bottom: 16px;
-                             padding-bottom: 8px;
-                             border-bottom: 1px solid var(--border);
-                           }
+          h2 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+          }
 
-                           /* =====================
-                        SELECTOR CONTAINER
-                        Dating method dropdown
-                        ===================== */
+          /* =====================
+      SELECTOR CONTAINER
+      Dating method dropdown
+      ===================== */
 
-                           .selector-container {
-                             margin-bottom: 24px;
-                           }
+          .selector-container {
+            margin-bottom: 24px;
+          }
 
-                           /* =====================
-                        SEGMENTED CONTROL
-                        Three side-by-side buttons for dating method selection
-                        ===================== */
+          /* =====================
+      SEGMENTED CONTROL
+      Three side-by-side buttons for dating method selection
+      ===================== */
 
-                           .segmented-control {
-                             display: flex;
-                             gap: 8px;
-                           }
+          .segmented-control {
+            display: flex;
+            gap: 8px;
+          }
 
-                           .segment-btn {
-                             /* Override the default button styles */
-                             flex: 1;
-                             width: auto;
-                             background-color: transparent;
-                             color: var(--text-secondary);
-                             border: 1px solid var(--border);
-                             border-radius: 8px;
-                             padding: 12px 8px;
-                             font-size: 0.9rem;
-                             font-weight: 600;
-                             letter-spacing: 0.05em;
-                           }
+          .segment-btn {
+            /* Override the default button styles */
+            flex: 1;
+            width: auto;
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+          }
 
-                           .segment-btn:hover {
-                             border-color: var(--accent);
-                             color: var(--text-primary);
-                             background-color: transparent;
-                           }
+          .segment-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+            background-color: transparent;
+          }
 
-                           .segment-btn:active {
-                             transform: scale(0.98);
-                           }
+          .segment-btn:active {
+            transform: scale(0.98);
+          }
 
-                           /* Active state - glows amber when selected */
-                           .segment-btn.active {
-                             background-color: var(--accent);
-                             color: #1a1a2e;
-                             border-color: var(--accent);
-                           }
+          /* Active state - glows amber when selected */
+          .segment-btn.active {
+            background-color: var(--accent);
+            color: #1a1a2e;
+            border-color: var(--accent);
+          }
 
-                           /* =====================
-                        CALCULATOR CARDS
-                        Each dating method gets its own card
-                        ===================== */
+          /* =====================
+      CALCULATOR CARDS
+      Each dating method gets its own card
+      ===================== */
 
-                           .calculator-card {
-                             /* Card sits above the background */
-                             background-color: var(--surface);
-                             border: 1px solid var(--border);
-                             border-radius: 12px;
-                             padding: 20px;
-                             margin-bottom: 20px;
-                           }
+          .calculator-card {
+            /* Card sits above the background */
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+          }
 
-                           .calculator-card h3 {
-                             color: var(--accent);
-                             font-size: 1rem;
-                             font-weight: 600;
-                             margin-bottom: 16px;
-                             text-transform: uppercase;
-                             letter-spacing: 0.08em;
-                           }
+          .calculator-card h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+          }
 
-                           /* =====================
-                            LABELS
-                            ===================== */
+          /* =====================
+          LABELS
+          ===================== */
 
-                           label {
-                             /* Block makes label sit on its own line above the input */
-                             display: block;
-                             color: var(--text-secondary);
-                             font-size: 0.85rem;
-                             font-weight: 500;
-                             margin-bottom: 6px;
-                             letter-spacing: 0.03em;
-                             text-transform: uppercase;
-                           }
+          label {
+            /* Block makes label sit on its own line above the input */
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+          }
 
-                           /* =====================
-                            INPUTS
-                            Fisher-price philosophy - big, clear, obvious
-                            ===================== */
+          /* =====================
+          INPUTS
+          Fisher-price philosophy - big, clear, obvious
+          ===================== */
 
-                           input[type="date"],
-                           input[type="number"] {
-                             /* Full width of the card */
-                             width: 100%;
-                             background-color: var(--bg);
-                             color: var(--text-primary);
-                             border: 1px solid var(--border);
-                             border-radius: 8px;
-                             padding: 14px 16px;
-                             font-size: 1rem;
-                             margin-bottom: 16px;
-                             /* Smooth border colour change on focus */
-                             transition: border-color 0.2s ease;
-                             /* Remove default browser styling */
-                             -webkit-appearance: none;
-                             appearance: none;
-                             color-scheme: dark;
-                           }
+          input[type="date"],
+          input[type="number"] {
+            /* Full width of the card */
+            width: 100%;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            /* Smooth border colour change on focus */
+            transition: border-color 0.2s ease;
+            /* Remove default browser styling */
+            -webkit-appearance: none;
+            appearance: none;
+            color-scheme: dark;
+          }
 
-                           /* Glows amber when you tap into it */
-                           input[type="date"]:focus,
-                           input[type="number"]:focus {
-                             /* Remove default browser focus ring */
-                             outline: none;
-                             border-color: var(--accent);
-                           }
+          /* Glows amber when you tap into it */
+          input[type="date"]:focus,
+          input[type="number"]:focus {
+            /* Remove default browser focus ring */
+            outline: none;
+            border-color: var(--accent);
+          }
 
-                           /* =====================
-                            BUTTONS
-                            Big, responsive, satisfying to tap
-                            ===================== */
+          /* =====================
+          BUTTONS
+          Big, responsive, satisfying to tap
+          ===================== */
 
-                           button {
-                             width: 100%;
-                             background-color: var(--accent);
-                             color: #1a1a2e;
-                             border: none;
-                             border-radius: 8px;
-                             padding: 16px;
-                             font-size: 1rem;
-                             font-weight: 700;
-                             letter-spacing: 0.03em;
-                             cursor: pointer;
-                             /* Smooth transitions for all state changes */
-                             transition:
-                               background-color 0.15s ease,
-                               transform 0.1s ease;
-                           }
+          button {
+            width: 100%;
+            background-color: var(--accent);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            cursor: pointer;
+            /* Smooth transitions for all state changes */
+            transition:
+              background-color 0.15s ease,
+              transform 0.1s ease;
+          }
 
-                           /* Slightly darker when hovered on desktop */
-                           button:hover {
-                             background-color: var(--accent-hover);
-                           }
+          /* Slightly darker when hovered on desktop */
+          button:hover {
+            background-color: var(--accent-hover);
+          }
 
-                           /* Physically presses down when tapped - the Fisher-price moment */
-                           button:active {
-                             background-color: var(--accent-hover);
-                             transform: scale(0.98);
-                           }
+          /* Physically presses down when tapped - the Fisher-price moment */
+          button:active {
+            background-color: var(--accent-hover);
+            transform: scale(0.98);
+          }
 
-                           /* =====================
-                            RESULTS CONTAINER
-                            Hidden until JavaScript writes to it
-                            ===================== */
+          /* =====================
+          RESULTS CONTAINER
+          Hidden until JavaScript writes to it
+          ===================== */
 
-                           .result {
-                             margin-top: 16px;
-                             padding: 16px;
-                             background-color: var(--bg);
-                             border-radius: 8px;
-                             border-left: 3px solid var(--accent);
-                           }
+          .result {
+            margin-top: 16px;
+            padding: 16px;
+            background-color: var(--bg);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent);
+          }
 
-                           .result p {
-                             color: var(--text-primary);
-                             font-size: 1rem;
-                             margin-bottom: 6px;
-                           }
+          .result p {
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 6px;
+          }
 
-                           .result .edd {
-                             color: var(--accent);
-                             font-size: 1.3rem;
-                             font-weight: 700;
-                           }
+          .result .edd {
+            color: var(--accent);
+            font-size: 1.3rem;
+            font-weight: 700;
+          }
 
-                           .result .ga {
-                             color: var(--text-secondary);
-                             font-size: 0.9rem;
-                           }
+          .result .ga {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+          }
 
-                           /* Warning flag for discrepancies */
-                           .flag {
-                             margin-top: 10px;
-                             padding: 10px 12px;
-                             background-color: rgba(251, 146, 60, 0.15);
-                             border-left: 3px solid var(--flag);
-                             border-radius: 4px;
-                             color: var(--flag);
-                             font-size: 0.85rem;
-                           }
+          /* Warning flag for discrepancies */
+          .flag {
+            margin-top: 10px;
+            padding: 10px 12px;
+            background-color: rgba(251, 146, 60, 0.15);
+            border-left: 3px solid var(--flag);
+            border-radius: 4px;
+            color: var(--flag);
+            font-size: 0.85rem;
+          }
 
-                           /* =====================
-                        GESTATIONAL AGE ROW
-                        Weeks and days inputs sit side by side
-                        ===================== */
+          /* =====================
+      GESTATIONAL AGE ROW
+      Weeks and days inputs sit side by side
+      ===================== */
 
-                           .ga-input-row {
-                             display: flex;
-                             gap: 12px;
-                             margin-bottom: 16px;
-                           }
+          .ga-input-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+          }
 
-                           .ga-input-group {
-                             flex: 1;
-                             display: flex;
-                             flex-direction: column;
-                           }
+          .ga-input-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+          }
 
-                           .ga-input-group input {
-                             margin-bottom: 4px;
-                           }
+          .ga-input-group input {
+            margin-bottom: 4px;
+          }
 
-                           /* Match ga-label style to our regular labels */
-                           .ga-label {
-                             display: block;
-                             color: var(--text-secondary);
-                             font-size: 0.85rem;
-                             font-weight: 500;
-                             letter-spacing: 0.03em;
-                             text-transform: uppercase;
-                             margin-bottom: 6px;
-                           }
+          /* Match ga-label style to our regular labels */
+          .ga-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+          }
 
-                           /* =====================
-                        EMBRYO TYPE SELECTOR
-                        Dropdown within ART card for Day 3 vs Day 5 selection
-                        ===================== */
+          /* =====================
+      EMBRYO TYPE SELECTOR
+      Dropdown within ART card for Day 3 vs Day 5 selection
+      ===================== */
 
-                           #art-type {
-                             width: 100%;
-                             background-color: var(--bg);
-                             color: var(--text-primary);
-                             border: 1px solid var(--border);
-                             border-radius: 8px;
-                             padding: 14px 16px;
-                             font-size: 1rem;
-                             margin-bottom: 16px;
-                             cursor: pointer;
-                             transition: border-color 0.2s ease;
-                             color-scheme: dark;
-                             -webkit-appearance: none;
-                             appearance: none;
-                             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-                             background-repeat: no-repeat;
-                             background-position: right 16px center;
-                             padding-right: 40px;
-                           }
+          #art-type {
+            width: 100%;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+            color-scheme: dark;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+          }
 
-                           #art-type:focus {
-                             outline: none;
-                             border-color: var(--accent);
-                           }
+          #art-type:focus {
+            outline: none;
+            border-color: var(--accent);
+          }
 
-                           /* =====================
-                        RESULTS SECTION
-                        Persistent accumulated results below the cards
-                        ===================== */
+          /* =====================
+      RESULTS SECTION
+      Persistent accumulated results below the cards
+      ===================== */
 
-                           .results-section {
-                             background-color: var(--surface);
-                             border: 1px solid var(--border);
-                             border-radius: 12px;
-                             padding: 20px;
-                             margin-top: 8px;
-                           }
+          .results-section {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 8px;
+          }
 
-                           .results-section h3 {
-                             color: var(--accent);
-                             font-size: 1rem;
-                             font-weight: 600;
-                             margin-bottom: 16px;
-                             text-transform: uppercase;
-                             letter-spacing: 0.08em;
-                           }
+          .results-section h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+          }
 
-                           .result-row {
-                             display: grid;
-                             grid-template-columns: minmax(80px, 120px) 1fr auto auto;
-                             align-items: center;
-                             padding: 10px 0;
-                             border-bottom: 1px solid var(--border);
-                             gap: 8px;
-                           }
-
-                           .result-row:last-of-type {
-                             border-bottom: none;
-                           }
-
-                           .result-row .method {
-                             color: var(--text-secondary);
-                             font-size: 0.85rem;
-                             font-weight: 600;
-                             text-transform: uppercase;
-                             letter-spacing: 0.05em;
-                           }
-
-                           .result-row .edd-date {
-                             color: var(--text-primary);
-                             font-size: 1rem;
-                             font-weight: 600;
-                           }
-
-                           .result-row .ga-today {
-                             color: var(--text-secondary);
-                             font-size: 0.85rem;
-                           }
-
-                           /* =====================
-                        USE EDD BUTTON
-                        Small inline button on each result row
-                        ===================== */
-
-                           .use-edd-btn {
-                             width: auto;
-                             background-color: transparent;
-                             color: var(--accent);
-                             border: 1px solid var(--accent);
-                             border-radius: 6px;
-                             padding: 4px 10px;
-                             font-size: 0.75rem;
-                             font-weight: 600;
-                             letter-spacing: 0.05em;
-                             white-space: nowrap;
-                           }
-
-                           .use-edd-btn:hover {
-                             background-color: var(--accent);
-                             color: #1a1a2e;
-                           }
-
-                           .use-edd-btn:active {
-                             transform: scale(0.98);
-                           }
-
-                           /* =====================
-                        CARE TIMELINE
-                        ===================== */
-
-                           .timeline-edd-row {
-                             display: flex;
-                             justify-content: space-between;
-                             align-items: center;
-                             margin-bottom: 20px;
-                             padding-bottom: 16px;
-                             border-bottom: 1px solid var(--border);
-                           }
-
-                           #care-timeline {
-          margin-top: 20px;
+          .result-row {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          grid-template-rows: auto auto;
+          align-items: center;
+          padding: 10px 0;
+          border-bottom: 1px solid var(--border);
+          gap: 4px 8px;
       }
 
-                           .toggle-row {
-                             display: flex;
-                             justify-content: flex-end;
-                             align-items: center;
-                             gap: 10px
-                             margin-bottom: 20px;
-                           }
+      .method {
+          grid-column: 1;
+          grid-row: 1;
+          color: var(--text-secondary);
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+      }
 
-                           .toggle-row label {
-                      padding-right: 4px;
-                  }
+        .result-row:last-of-type {
+            border-bottom: none;
+          }
 
-                           .toggle-btn {
-                             width: auto;
-                             background-color: transparent;
-                             color: var(--text-secondary);
-                             border: 1px solid var(--border);
-                             border-radius: 6px;
-                             padding: 6px 16px;
-                             font-size: 0.85rem;
-                             font-weight: 600;
-                           }
+        .edd-date {
+          grid-column: 1;
+          grid-row: 2;
+          color: var(--text-primary);
+          font-size: 1rem;
+          font-weight: 600;
+          white-space: nowrap;
+      }
 
-                           .toggle-btn.active {
-                             background-color: var(--accent);
-                             color: #1a1a2e;
-                             border-color: var(--accent);
-                           }
+      .ga-today {
+          grid-column: 1;
+          grid-row: 3;
+          color: var(--text-secondary);
+          font-size: 0.85rem;
+      }
 
-                           /* =====================
-                        CHECKBOX
-                        ===================== */
+          /* =====================
+      USE EDD BUTTON
+      Small inline button on each result row
+      ===================== */
 
-                           input[type="checkbox"] {
-                             width: 20px;
-                             height: 20px;
-                             accent-color: var(--accent);
-                             cursor: pointer;
-                             color-scheme: dark;
-                           }
+          .use-edd-btn {
+            grid-column: 2;
+            grid-row: 1 / 4;
+            width: auto;
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+          }
 
-                           /* =====================
-               SCHEDULE OUTPUT
-               ===================== */
+          .use-edd-btn:hover {
+            background-color: var(--accent);
+            color: #1a1a2e;
+          }
 
-            .schedule-list {
-                margin-top: 16px;
+          .use-edd-btn:active {
+            transform: scale(0.98);
+          }
+
+          /* =====================
+      CARE TIMELINE
+      ===================== */
+
+          .timeline-edd-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+          }
+
+          #care-timeline {
+                margin-top: 20px;
             }
 
-            .schedule-item {
-                padding: 14px 0;
-                border-bottom: 1px solid var(--border);
+                .toggle-row {
+                  display: flex;
+                  justify-content: flex-end;
+                  align-items: center;
+                  gap: 10px
+                  margin-bottom: 20px;
+                }
+
+                .toggle-row label {
+          padding-right: 4px;
             }
 
-            .schedule-item:last-child {
-                border-bottom: none;
-            }
+                .toggle-btn {
+                  width: auto;
+                  background-color: transparent;
+                  color: var(--text-secondary);
+                  border: 1px solid var(--border);
+                  border-radius: 6px;
+                  padding: 6px 16px;
+                  font-size: 0.85rem;
+                  font-weight: 600;
+                }
 
-            .schedule-name {
-                color: var(--text-primary);
-                font-size: 1rem;
-                font-weight: 600;
-                margin-bottom: 4px;
-            }
+                .toggle-btn.active {
+                  background-color: var(--accent);
+                  color: #1a1a2e;
+                  border-color: var(--accent);
+                }
 
-            .schedule-dates {
-                color: var(--accent);
-                font-size: 0.95rem;
-                font-weight: 600;
-                margin-bottom: 2px;
-            }
+      /* =====================
+      CHECKBOX
+      ===================== */
 
-            .schedule-ga {
-                color: var(--text-secondary);
-                font-size: 0.85rem;
-                margin-bottom: 4px;
-            }
+          input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            color-scheme: dark;
+          }
 
-            .schedule-note {
-                color: var(--flag);
-                font-size: 0.8rem;
-                font-style: italic;
-                margin-top: 4px;
-            }
+      /* =====================
+      SCHEDULE OUTPUT
+      ===================== */
+
+          .schedule-list {
+              margin-top: 16px;
+          }
+
+          .schedule-item {
+              padding: 14px 0;
+              border-bottom: 1px solid var(--border);
+          }
+
+          .schedule-item:last-child {
+              border-bottom: none;
+          }
+
+          .schedule-name {
+              color: var(--text-primary);
+              font-size: 1rem;
+              font-weight: 600;
+              margin-bottom: 4px;
+          }
+
+          .schedule-dates {
+              color: var(--accent);
+              font-size: 0.95rem;
+              font-weight: 600;
+              margin-bottom: 2px;
+          }
+
+          .schedule-ga {
+              color: var(--text-secondary);
+              font-size: 0.85rem;
+              margin-bottom: 4px;
+          }
+
+          .schedule-note {
+              color: var(--flag);
+              font-size: 0.8rem;
+              font-style: italic;
+              margin-top: 4px;
+          }
     </style>
   </head>
   <body>
@@ -715,6 +725,7 @@
             <label>Working EDD</label>
             <p id="timeline-edd-display" class="edd"></p>
             <p id="timeline-edd-source" class="ga"></p>
+            <p id="timeline-ga-display" class="ga"></p>
           </div>
           <button class="use-edd-btn" onclick="openCalculator()">Edit</button>
         </div>
@@ -861,6 +872,14 @@
           month: "long",
           day: "numeric"
         });
+      }
+      //Shows the current gestational age once the user has selected which calculation method to use
+      function updateGADisplay() {
+        const lmp = new Date(workingEDD.getTime() - 280 * 24 * 60 * 60 * 1000);
+        const today = new Date();
+        const ga = getGestationalAge(lmp, today);
+        document.getElementById("timeline-ga-display").textContent =
+          `GA today: ${ga.weeks}w${ga.days}d`;
       }
 
       // =====================
@@ -1270,6 +1289,9 @@
 
         // Generate schedule
         generateSchedule();
+
+        // display current gestational age even after calculator collapses
+        updateGADisplay();
 
         // Scroll to timeline
         timeline.scrollIntoView({ behavior: "smooth" });
