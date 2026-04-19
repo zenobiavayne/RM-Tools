@@ -627,8 +627,8 @@
         <select id="province-selector" onchange="saveProvince()">
           <option value="">Province</option>
           <option value="BC">BC</option>
-          <option value="AB" disabled>AB</option>
-          <option value="ON" disabled>ON</option>
+          <option value="AB">AB</option>
+          <option value="ON">ON</option>
         </select>
         <button class="clear-btn" onclick="clearAll()">Clear</button>
       </div>
@@ -921,6 +921,190 @@
             note: null,
             condition: null
           }
+        ],
+        AB: [
+          {
+            name: "Dating Ultrasound",
+            startWeek: 7,
+            startDay: 0,
+            endWeek: 13,
+            endDay: 6,
+            note: "Ideally before 13w6d for most accurate dating (SOGC)",
+            condition: null
+          },
+          {
+            name: "First Trimester Screen — Bloodwork",
+            startWeek: 11,
+            startDay: 0,
+            endWeek: 13,
+            endDay: 6,
+            note: "First trimester bloodwork — trisomies and NTDs",
+            condition: null
+          },
+          {
+            name: "First Trimester Screen — NT Ultrasound",
+            startWeek: 11,
+            startDay: 0,
+            endWeek: 13,
+            endDay: 6,
+            note: "Can double as dating scan if client prefers to avoid two first trimester ultrasounds",
+            condition: null
+          },
+          {
+            name: "Quad Screen",
+            startWeek: 15,
+            startDay: 0,
+            endWeek: 20,
+            endDay: 6,
+            note: "Second trimester serum screening",
+            condition: null
+          },
+          {
+            name: "NIPS",
+            startWeek: 10,
+            startDay: 0,
+            endWeek: 20,
+            endDay: 0,
+            note: "Optional, out of pocket. More accurate trisomy screening.",
+            condition: "optional"
+          },
+          {
+            name: "Anatomy Ultrasound",
+            startWeek: 18,
+            startDay: 0,
+            endWeek: 22,
+            endDay: 0,
+            note: "Later scans have increased chance of missed views",
+            condition: null
+          },
+          {
+            name: "Gestational Diabetes Screening",
+            startWeek: 24,
+            startDay: 0,
+            endWeek: 28,
+            endDay: 0,
+            note: null,
+            condition: null
+          },
+          {
+            name: "WinRho Injection",
+            startWeek: 28,
+            startDay: 0,
+            endWeek: 32,
+            endDay: 0,
+            note: "Rh negative patients only — confirm blood type",
+            condition: null
+          },
+          {
+            name: "dTap and RSV Immunization",
+            startWeek: 27,
+            startDay: 0,
+            endWeek: 32,
+            endDay: 0,
+            note: null,
+            condition: null
+          },
+          {
+            name: "GBS Swab",
+            startWeek: 35,
+            startDay: 0,
+            endWeek: 37,
+            endDay: 0,
+            note: null,
+            condition: null
+          }
+        ],
+        ON: [
+          {
+            name: "Dating Ultrasound",
+            startWeek: 7,
+            startDay: 0,
+            endWeek: 13,
+            endDay: 6,
+            note: "Ideally before 13w6d for most accurate dating (SOGC)",
+            condition: null
+          },
+          {
+            name: "eFTS Part 1 — MMS Bloodwork",
+            startWeek: 11,
+            startDay: 2,
+            endWeek: 13,
+            endDay: 3,
+            note: "First trimester bloodwork — trisomies and NTDs",
+            condition: null
+          },
+          {
+            name: "eFTS Part 2 — NT Ultrasound",
+            startWeek: 11,
+            startDay: 0,
+            endWeek: 14,
+            endDay: 0,
+            note: "Can double as dating scan if client prefers to avoid two first trimester ultrasounds",
+            condition: null
+          },
+          {
+            name: "Quad Screen",
+            startWeek: 15,
+            startDay: 0,
+            endWeek: 20,
+            endDay: 6,
+            note: "Second trimester serum screening",
+            condition: null
+          },
+          {
+            name: "NIPS",
+            startWeek: 10,
+            startDay: 0,
+            endWeek: 20,
+            endDay: 0,
+            note: "Optional, out of pocket. More accurate trisomy screening.",
+            condition: "optional"
+          },
+          {
+            name: "Anatomy Ultrasound",
+            startWeek: 18,
+            startDay: 0,
+            endWeek: 22,
+            endDay: 0,
+            note: "Later scans have increased chance of missed views",
+            condition: null
+          },
+          {
+            name: "Gestational Diabetes Screening",
+            startWeek: 24,
+            startDay: 0,
+            endWeek: 28,
+            endDay: 0,
+            note: null,
+            condition: null
+          },
+          {
+            name: "WinRho Injection",
+            startWeek: 28,
+            startDay: 0,
+            endWeek: 32,
+            endDay: 0,
+            note: "Rh negative patients only — confirm blood type",
+            condition: null
+          },
+          {
+            name: "dTap and RSV Immunization",
+            startWeek: 27,
+            startDay: 0,
+            endWeek: 32,
+            endDay: 0,
+            note: null,
+            condition: null
+          },
+          {
+            name: "GBS Swab",
+            startWeek: 35,
+            startDay: 0,
+            endWeek: 37,
+            endDay: 0,
+            note: null,
+            condition: null
+          }
         ]
       };
 
@@ -1038,11 +1222,11 @@
         // T3 blanket warning - dating unreliable regardless of discrepancy
         if (totalWeeks >= 28) {
           flagContainer.innerHTML = `
-            <div class="flag">
-                ⚠ Third trimester dating is not reliable for establishing EDD. 
-                Exercise clinical judgement.
-            </div>
-        `;
+                  <div class="flag">
+                      ⚠ Third trimester dating is not reliable for establishing EDD.
+                      Exercise clinical judgement.
+                  </div>
+              `;
           return;
         }
 
@@ -1076,11 +1260,11 @@
         // Show flag if discrepancy found
         if (discrepancyFound) {
           flagContainer.innerHTML = `
-            <div class="flag">
-                ⚠ Date discrepancy detected in the ${trimester} trimester 
-                (threshold: ${threshold} days). Review and use clinical judgement.
-            </div>
-        `;
+                  <div class="flag">
+                      ⚠ Date discrepancy detected in the ${trimester} trimester
+                      (threshold: ${threshold} days). Review and use clinical judgement.
+                  </div>
+              `;
         }
       }
       // =====================
@@ -1153,8 +1337,8 @@
         // Check if the user actually entered a date
         if (!input) {
           document.getElementById("lmp-result").innerHTML = `
-            <div class="flag">⚠ Please enter an LMP date.</div>
-        `;
+                  <div class="flag">⚠ Please enter an LMP date.</div>
+              `;
           return;
         }
 
@@ -1171,23 +1355,23 @@
 
         // Write the result into the result container
         document.getElementById("lmp-result").innerHTML = `
-        <div class="result">
-            <p>Estimated Due Date</p>
-            <p class="edd">${formatDate(edd)}</p>
-            <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
-        </div>
-    `;
+              <div class="result">
+                  <p>Estimated Due Date</p>
+                  <p class="edd">${formatDate(edd)}</p>
+                  <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
+              </div>
+          `;
 
         // Write to persistent results section
         calculatedEDDs.lmp = edd;
         document.getElementById("results-lmp").innerHTML = `
-          <div class="result-row">
-            <span class="method">EDD by LMP</span>
-            <span class="edd-date">${formatDate(edd)}</span>
-            <span class="ga-today">${ga.weeks}w${ga.days}d</span>
-            <button class="use-edd-btn" onclick="useEDD('${edd.toISOString()}', 'LMP')">Use</button>
-          </div>
-`;
+                <div class="result-row">
+                  <span class="method">EDD by LMP</span>
+                  <span class="edd-date">${formatDate(edd)}</span>
+                  <span class="ga-today">${ga.weeks}w${ga.days}d</span>
+                  <button class="use-edd-btn" onclick="useEDD('${edd.toISOString()}', 'LMP')">Use</button>
+                </div>
+      `;
 
         // Show results section
         document.getElementById("results-section").style.display = "block";
@@ -1210,8 +1394,8 @@
         // Check that all fields are filled
         if (!usDateInput || weeksInput === "" || daysInput === "") {
           document.getElementById("us-result").innerHTML = `
-            <div class="flag">⚠ Please enter the ultrasound date and gestational age.</div>
-        `;
+                  <div class="flag">⚠ Please enter the ultrasound date and gestational age.</div>
+              `;
           return;
         }
 
@@ -1239,23 +1423,23 @@
 
         // Write results
         document.getElementById("us-result").innerHTML = `
-        <div class="result">
-            <p>Estimated Due Date</p>
-            <p class="edd">${formatDate(edd)}</p>
-            <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
-        </div>
-    `;
+              <div class="result">
+                  <p>Estimated Due Date</p>
+                  <p class="edd">${formatDate(edd)}</p>
+                  <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
+              </div>
+          `;
 
         // Write to persistent results section
         calculatedEDDs.ultrasound = edd;
         document.getElementById("results-us").innerHTML = `
-          <div class="result-row">
-              <span class="method">EDD by US</span>
-              <span class="edd-date">${formatDate(edd)}</span>
-              <span class="ga-today">${ga.weeks}w${ga.days}d</span>
-              <button class="use-edd-btn" onclick="useEDD('${edd.toISOString()}', 'Ultrasound')">Use</button>
-          </div>
-    `;
+                <div class="result-row">
+                    <span class="method">EDD by US</span>
+                    <span class="edd-date">${formatDate(edd)}</span>
+                    <span class="ga-today">${ga.weeks}w${ga.days}d</span>
+                    <button class="use-edd-btn" onclick="useEDD('${edd.toISOString()}', 'Ultrasound')">Use</button>
+                </div>
+          `;
 
         // Show results section
         document.getElementById("results-section").style.display = "block";
@@ -1277,8 +1461,8 @@
         // Check that all fields are filled
         if (!transferDateInput) {
           document.getElementById("art-result").innerHTML = `
-            <div class="flag">⚠ Please select the embryo age and date of transfer.</div>
-        `;
+                  <div class="flag">⚠ Please select the embryo age and date of transfer.</div>
+              `;
           return;
         }
 
@@ -1309,23 +1493,23 @@
 
         // Write results
         document.getElementById("art-result").innerHTML = `
-        <div class="result">
-            <p>Estimated Due Date</p>
-            <p class="edd">${formatDate(edd)}</p>
-            <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
-        </div>
-    `;
+              <div class="result">
+                  <p>Estimated Due Date</p>
+                  <p class="edd">${formatDate(edd)}</p>
+                  <p class="ga">GA today: ${ga.weeks}w${ga.days}d</p>
+              </div>
+          `;
 
         // Write to persistent results section
         calculatedEDDs.art = edd;
         document.getElementById("results-art").innerHTML = `
-          <div class="result-row">
-              <span class="method">EDD by ART</span>
-              <span class="edd-date">${formatDate(edd)}</span>
-              <span class="ga-today">${ga.weeks}w${ga.days}d</span>
-              <button class="use-edd-btn" onclick="useEDD('${edd.toISOString()}', 'ART')">Use</button>
-          </div>
-    `;
+                <div class="result-row">
+                    <span class="method">EDD by ART</span>
+                    <span class="edd-date">${formatDate(edd)}</span>
+                    <span class="ga-today">${ga.weeks}w${ga.days}d</span>
+                    <button class="use-edd-btn" onclick="useEDD('${edd.toISOString()}', 'ART')">Use</button>
+                </div>
+          `;
 
         // Show results section
         document.getElementById("results-section").style.display = "block";
@@ -1428,8 +1612,8 @@
         const province = document.getElementById("province-selector").value;
         if (!province) {
           output.innerHTML = `
-            <div class="flag">⚠ Please select a province to generate a schedule.</div>
-        `;
+                  <div class="flag">⚠ Please select a province to generate a schedule.</div>
+              `;
           return;
         }
 
@@ -1469,13 +1653,13 @@
             : `After ${formatDate(startDate)}`;
 
           scheduleHTML += `
-            <div class="schedule-item">
-                <div class="schedule-name">${test.name}</div>
-                <div class="schedule-dates">${dateWindow}</div>
-                <div class="schedule-ga">${gaWindow}</div>
-                ${test.note ? `<div class="schedule-note">${test.note}</div>` : ""}
-            </div>
-        `;
+                  <div class="schedule-item">
+                      <div class="schedule-name">${test.name}</div>
+                      <div class="schedule-dates">${dateWindow}</div>
+                      <div class="schedule-ga">${gaWindow}</div>
+                      ${test.note ? `<div class="schedule-note">${test.note}</div>` : ""}
+                  </div>
+              `;
         });
 
         scheduleHTML += "</div>";
