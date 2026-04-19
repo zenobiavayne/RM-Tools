@@ -561,8 +561,8 @@
         <select id="province-selector" onchange="saveProvince()">
           <option value="">Province</option>
           <option value="BC">BC</option>
-          <option value="AB">AB</option>
-          <option value="ON">ON</option>
+          <option value="AB" disabled>AB</option>
+          <option value="ON" disabled>ON</option>
         </select>
         <button class="clear-btn" onclick="clearAll()">Clear</button>
       </div>
@@ -1313,6 +1313,7 @@
           "Manually entered";
 
         generateSchedule();
+        updateGADisplay();
       }
 
       // =====================
