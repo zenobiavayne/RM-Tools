@@ -113,8 +113,10 @@ background-position: right 8px center;
 }
 
 .home-subtitle {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
 }
 
 .home-buttons {
@@ -372,6 +374,28 @@ button:hover {
 button:active {
     background-color: var(--accent-hover);
     transform: scale(0.98);
+}
+
+/* =====================
+BACK BUTTON
+Returns to parent menu from sub-tool
+===================== */
+
+.back-btn {
+    width: auto;
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: none;
+    padding: 8px 0px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background-color: transparent;
+    color: var(--accent);
 }
 
 /* =====================
