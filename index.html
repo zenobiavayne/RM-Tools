@@ -5,44 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RM Tools | Midwifery Clinical Calculator</title>
     <style>
-                :root {
-                  --bg: #1e1e2e;
-                  --surface: #2a2a3e;
-                  --accent: #f59e0b;
-                  --accent-hover: #d97706;
-                  --text-primary: #f1f5f9;
-                  --text-secondary: #94a3b8;
-                  --flag: #fb923c;
-                  --border: #3a3a5c;
-                }
+              :root {
+                --bg: #1e1e2e;
+                --surface: #2a2a3e;
+                --accent: #f59e0b;
+                --accent-hover: #d97706;
+                --text-primary: #f1f5f9;
+                --text-secondary: #94a3b8;
+                --flag: #fb923c;
+                --border: #3a3a5c;
+              }
 
-                * {
-                  margin: 0;
-                  padding: 0;
-                  box-sizing: border-box;
-                }
+              * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+              }
 
-                body {
-                  background-color: var(--bg);
-                  color: var(--text-primary);
-                  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                  font-size: 16px;
-                  line-height: 1.5;
-                }
+              body {
+                background-color: var(--bg);
+                color: var(--text-primary);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                font-size: 16px;
+                line-height: 1.5;
+              }
 
-                header {
-                  background-color: var(--surface);
-                  border-bottom: 2px solid var(--accent);
-                  padding: 16px 20px;
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                }
+              header {
+                background-color: var(--surface);
+                border-bottom: 2px solid var(--accent);
+                padding: 16px 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                /* Stick to top of screen always */
+                position: sticky;
+                top: 0;
+                z-index: 100;
+              }
 
+                .header-left {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    cursor: pointer;
+                }
+                .home-icon {
+                    color: var(--accent);
+                    font-size: 1.4rem;
+                    line-height: 1;
+                }
                 header h1 {
                   color: var(--accent);
                   font-size: 1.5rem;
                   letter-spacing: 0.05em;
+                  cursor: pointer;
                 }
 
                 /* Clear button - outlined rather than filled so it's less dominant */
@@ -90,539 +106,628 @@
                   background-position: right 8px center;
                 }
 
-                main {
-                  padding: 20px;
-                  max-width: 600px;
-                  margin: 0 auto;
-                }
+      /* =====================
+         HOME SCREEN
+         ===================== */
 
-                h2 {
-                  color: var(--text-primary);
-                  font-size: 1.1rem;
-                  margin-bottom: 16px;
-                  padding-bottom: 8px;
-                  border-bottom: 1px solid var(--border);
-                }
+      #screen-home {
+          padding: 20px;
+      }
 
-                /* =====================
-            SELECTOR CONTAINER
-            Dating method dropdown
-            ===================== */
+      .home-welcome {
+          margin-bottom: 32px;
+          padding-top: 8px;
+      }
 
-                .selector-container {
-                  margin-bottom: 24px;
-                }
+      .home-subtitle {
+          color: var(--text-secondary);
+          font-size: 0.95rem;
+      }
 
-                /* =====================
-            SEGMENTED CONTROL
-            Three side-by-side buttons for dating method selection
-            ===================== */
+      .home-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+      }
 
-                .segmented-control {
-                  display: flex;
-                  gap: 8px;
-                }
+      .home-tool-btn {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          width: 100%;
+          background-color: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 20px;
+          text-align: left;
+          transition: border-color 0.2s ease, transform 0.1s ease;
+      }
 
-                .segment-btn {
-                  /* Override the default button styles */
-                  flex: 1;
-                  width: auto;
-                  background-color: transparent;
-                  color: var(--text-secondary);
-                  border: 1px solid var(--border);
-                  border-radius: 8px;
-                  padding: 12px 8px;
-                  font-size: 0.9rem;
-                  font-weight: 600;
-                  letter-spacing: 0.05em;
-                }
+      .home-tool-btn:hover {
+          border-color: var(--accent);
+          background-color: var(--surface);
+      }
 
-                .segment-btn:hover {
-                  border-color: var(--accent);
-                  color: var(--text-primary);
-                  background-color: transparent;
-                }
+      .home-tool-btn:active {
+          transform: scale(0.98);
+      }
 
-                .segment-btn:active {
-                  transform: scale(0.98);
-                }
+      .home-tool-btn.coming-soon {
+          opacity: 0.5;
+          cursor: not-allowed;
+      }
 
-                /* Active state - glows amber when selected */
-                .segment-btn.active {
-                  background-color: var(--accent);
-                  color: #1a1a2e;
-                  border-color: var(--accent);
-                }
+      .home-tool-btn.coming-soon:hover {
+          border-color: var(--border);
+      }
 
-                /* =====================
-            CALCULATOR CARDS
-            Each dating method gets its own card
-            ===================== */
+      .home-tool-btn.coming-soon:active {
+          transform: none;
+      }
 
-                .calculator-card {
-                  /* Card sits above the background */
-                  background-color: var(--surface);
-                  border: 1px solid var(--border);
-                  border-radius: 12px;
-                  padding: 20px;
-                  margin-bottom: 20px;
-                }
+      .tool-icon {
+          font-size: 2rem;
+          line-height: 1;
+      }
 
-                .calculator-card h3 {
-                  color: var(--accent);
-                  font-size: 1rem;
-                  font-weight: 600;
-                  margin-bottom: 16px;
-                  text-transform: uppercase;
-                  letter-spacing: 0.08em;
-                }
+      .tool-info {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+      }
 
-                /* =====================
-                LABELS
-                ===================== */
+      .tool-name {
+          color: var(--text-primary);
+          font-size: 1.1rem;
+          font-weight: 700;
+      }
 
-                label {
-                  /* Block makes label sit on its own line above the input */
-                  display: block;
-                  color: var(--text-secondary);
-                  font-size: 0.85rem;
-                  font-weight: 500;
-                  margin-bottom: 6px;
-                  letter-spacing: 0.03em;
-                  text-transform: uppercase;
-                }
+      .tool-desc {
+          color: var(--text-secondary);
+          font-size: 0.85rem;
+      }
 
-                /* =====================
-                INPUTS
-                Fisher-price philosophy - big, clear, obvious
-                ===================== */
-
-                input[type="date"],
-                input[type="number"] {
-                  /* Full width of the card */
-                  width: 100%;
-                  background-color: var(--bg);
-                  color: var(--text-primary);
-                  border: 1px solid var(--border);
-                  border-radius: 8px;
-                  padding: 14px 16px;
-                  font-size: 1rem;
-                  margin-bottom: 16px;
-                  /* Smooth border colour change on focus */
-                  transition: border-color 0.2s ease;
-                  /* Remove default browser styling */
-                  -webkit-appearance: none;
-                  appearance: none;
-                  color-scheme: dark;
-                }
-
-                /* Glows amber when you tap into it */
-                input[type="date"]:focus,
-                input[type="number"]:focus {
-                  /* Remove default browser focus ring */
-                  outline: none;
-                  border-color: var(--accent);
-                }
-
-                /* =====================
-                BUTTONS
-                Big, responsive, satisfying to tap
-                ===================== */
-
-                button {
-                  width: 100%;
-                  background-color: var(--accent);
-                  color: #1a1a2e;
-                  border: none;
-                  border-radius: 8px;
-                  padding: 16px;
-                  font-size: 1rem;
-                  font-weight: 700;
-                  letter-spacing: 0.03em;
-                  cursor: pointer;
-                  /* Smooth transitions for all state changes */
-                  transition:
-                    background-color 0.15s ease,
-                    transform 0.1s ease;
-                }
-
-                /* Slightly darker when hovered on desktop */
-                button:hover {
-                  background-color: var(--accent-hover);
-                }
-
-                /* Physically presses down when tapped - the Fisher-price moment */
-                button:active {
-                  background-color: var(--accent-hover);
-                  transform: scale(0.98);
-                }
-
-                /* =====================
-                RESULTS CONTAINER
-                Hidden until JavaScript writes to it
-                ===================== */
-
-                .result {
-                  margin-top: 16px;
-                  padding: 16px;
-                  background-color: var(--bg);
-                  border-radius: 8px;
-                  border-left: 3px solid var(--accent);
-                }
-
-                .result p {
-                  color: var(--text-primary);
-                  font-size: 1rem;
-                  margin-bottom: 6px;
-                }
-
-                .result .edd {
-                  color: var(--accent);
-                  font-size: 1.3rem;
-                  font-weight: 700;
-                }
-
-                .result .ga {
-                  color: var(--text-secondary);
-                  font-size: 0.9rem;
-                }
-
-                /* Warning flag for discrepancies */
-                .flag {
-                  margin-top: 10px;
-                  padding: 10px 12px;
-                  background-color: rgba(251, 146, 60, 0.15);
-                  border-left: 3px solid var(--flag);
-                  border-radius: 4px;
-                  color: var(--flag);
-                  font-size: 0.85rem;
-                }
-
-                /* =====================
-            GESTATIONAL AGE ROW
-            Weeks and days inputs sit side by side
-            ===================== */
-
-                .ga-input-row {
-                  display: flex;
-                  gap: 12px;
-                  margin-bottom: 16px;
-                }
-
-                .ga-input-group {
-                  flex: 1;
-                  display: flex;
-                  flex-direction: column;
-                }
-
-                .ga-input-group input {
-                  margin-bottom: 4px;
-                }
-
-                /* Match ga-label style to our regular labels */
-                .ga-label {
-                  display: block;
-                  color: var(--text-secondary);
-                  font-size: 0.85rem;
-                  font-weight: 500;
-                  letter-spacing: 0.03em;
-                  text-transform: uppercase;
-                  margin-bottom: 6px;
-                }
-
-                /* =====================
-            EMBRYO TYPE SELECTOR
-            Dropdown within ART card for Day 3 vs Day 5 selection
-            ===================== */
-
-                #art-type {
-                  width: 100%;
-                  background-color: var(--bg);
-                  color: var(--text-primary);
-                  border: 1px solid var(--border);
-                  border-radius: 8px;
-                  padding: 14px 16px;
-                  font-size: 1rem;
-                  margin-bottom: 16px;
-                  cursor: pointer;
-                  transition: border-color 0.2s ease;
-                  color-scheme: dark;
-                  -webkit-appearance: none;
-                  appearance: none;
-                  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-                  background-repeat: no-repeat;
-                  background-position: right 16px center;
-                  padding-right: 40px;
-                }
-
-                #art-type:focus {
-                  outline: none;
-                  border-color: var(--accent);
-                }
-
-                /* =====================
-            RESULTS SECTION
-            Persistent accumulated results below the cards
-            ===================== */
-
-                .results-section {
-                  background-color: var(--surface);
-                  border: 1px solid var(--border);
-                  border-radius: 12px;
-                  padding: 20px;
-                  margin-top: 8px;
-                }
-
-                .results-section h3 {
-                  color: var(--accent);
-                  font-size: 1rem;
-                  font-weight: 600;
-                  margin-bottom: 16px;
-                  text-transform: uppercase;
-                  letter-spacing: 0.08em;
-                }
-
-                .result-row {
-                display: grid;
-                grid-template-columns: 1fr auto;
-                grid-template-rows: auto auto;
-                align-items: center;
-                padding: 10px 0;
-                border-bottom: 1px solid var(--border);
-                gap: 4px 8px;
+            main {
+              padding: 20px;
+              max-width: 600px;
+              margin: 0 auto;
             }
 
-            .method {
-                grid-column: 1;
-                grid-row: 1;
-                color: var(--text-secondary);
-                font-size: 0.85rem;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
+            h2 {
+              color: var(--text-primary);
+              font-size: 1.1rem;
+              margin-bottom: 16px;
+              padding-bottom: 8px;
+              border-bottom: 1px solid var(--border);
             }
 
-              .result-row:last-of-type {
-                  border-bottom: none;
-                }
+                    /* =====================
+                SELECTOR CONTAINER
+                Dating method dropdown
+                ===================== */
 
-              .edd-date {
-                grid-column: 1;
-                grid-row: 2;
-                color: var(--text-primary);
-                font-size: 1rem;
-                font-weight: 600;
-                white-space: nowrap;
-            }
+                    .selector-container {
+                      margin-bottom: 24px;
+                    }
 
-            .ga-today {
-                grid-column: 1;
-                grid-row: 3;
-                color: var(--text-secondary);
-                font-size: 0.85rem;
-            }
+                    /* =====================
+                SEGMENTED CONTROL
+                Three side-by-side buttons for dating method selection
+                ===================== */
 
-                /* =====================
-            USE EDD BUTTON
-            Small inline button on each result row
-            ===================== */
+                    .segmented-control {
+                      display: flex;
+                      gap: 8px;
+                    }
 
-                .use-edd-btn {
-                  grid-column: 2;
-                  grid-row: 1 / 4;
-                  width: auto;
-                  background-color: transparent;
-                  color: var(--accent);
-                  border: 1px solid var(--accent);
-                  border-radius: 6px;
-                  padding: 4px 10px;
-                  font-size: 0.75rem;
-                  font-weight: 600;
-                  letter-spacing: 0.05em;
-                  white-space: nowrap;
-                }
+                    .segment-btn {
+                      /* Override the default button styles */
+                      flex: 1;
+                      width: auto;
+                      background-color: transparent;
+                      color: var(--text-secondary);
+                      border: 1px solid var(--border);
+                      border-radius: 8px;
+                      padding: 12px 8px;
+                      font-size: 0.9rem;
+                      font-weight: 600;
+                      letter-spacing: 0.05em;
+                    }
 
-                .use-edd-btn:hover {
-                  background-color: var(--accent);
-                  color: #1a1a2e;
-                }
+                    .segment-btn:hover {
+                      border-color: var(--accent);
+                      color: var(--text-primary);
+                      background-color: transparent;
+                    }
 
-                .use-edd-btn:active {
-                  transform: scale(0.98);
-                }
+                    .segment-btn:active {
+                      transform: scale(0.98);
+                    }
 
-                /* =====================
-            CARE TIMELINE
-            ===================== */
+                    /* Active state - glows amber when selected */
+                    .segment-btn.active {
+                      background-color: var(--accent);
+                      color: #1a1a2e;
+                      border-color: var(--accent);
+                    }
 
-                .timeline-edd-row {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  margin-bottom: 20px;
-                  padding-bottom: 16px;
-                  border-bottom: 1px solid var(--border);
-                }
+                    /* =====================
+                CALCULATOR CARDS
+                Each dating method gets its own card
+                ===================== */
 
-                #care-timeline {
-                      margin-top: 20px;
-                  }
+                    .calculator-card {
+                      /* Card sits above the background */
+                      background-color: var(--surface);
+                      border: 1px solid var(--border);
+                      border-radius: 12px;
+                      padding: 20px;
+                      margin-bottom: 20px;
+                    }
 
-                      .toggle-row {
-                        display: flex;
-                        justify-content: flex-end;
-                        align-items: center;
-                        gap: 10px
-                        margin-bottom: 20px;
-                      }
+                    .calculator-card h3 {
+                      color: var(--accent);
+                      font-size: 1rem;
+                      font-weight: 600;
+                      margin-bottom: 16px;
+                      text-transform: uppercase;
+                      letter-spacing: 0.08em;
+                    }
 
-                      .toggle-row label {
-                padding-right: 4px;
-                  }
+                    /* =====================
+                    LABELS
+                    ===================== */
 
-                      .toggle-btn {
-                        width: auto;
-                        background-color: transparent;
-                        color: var(--text-secondary);
-                        border: 1px solid var(--border);
-                        border-radius: 6px;
-                        padding: 6px 16px;
-                        font-size: 0.85rem;
-                        font-weight: 600;
-                      }
+                    label {
+                      /* Block makes label sit on its own line above the input */
+                      display: block;
+                      color: var(--text-secondary);
+                      font-size: 0.85rem;
+                      font-weight: 500;
+                      margin-bottom: 6px;
+                      letter-spacing: 0.03em;
+                      text-transform: uppercase;
+                    }
 
-                      .toggle-btn.active {
-                        background-color: var(--accent);
-                        color: #1a1a2e;
-                        border-color: var(--accent);
-                      }
+                    /* =====================
+                    INPUTS
+                    Fisher-price philosophy - big, clear, obvious
+                    ===================== */
 
-            /* =====================
-            CHECKBOX
-            ===================== */
+                    input[type="date"],
+                    input[type="number"] {
+                      /* Full width of the card */
+                      width: 100%;
+                      background-color: var(--bg);
+                      color: var(--text-primary);
+                      border: 1px solid var(--border);
+                      border-radius: 8px;
+                      padding: 14px 16px;
+                      font-size: 1rem;
+                      margin-bottom: 16px;
+                      /* Smooth border colour change on focus */
+                      transition: border-color 0.2s ease;
+                      /* Remove default browser styling */
+                      -webkit-appearance: none;
+                      appearance: none;
+                      color-scheme: dark;
+                    }
 
-                input[type="checkbox"] {
-                  width: 20px;
-                  height: 20px;
-                  accent-color: var(--accent);
-                  cursor: pointer;
-                  color-scheme: dark;
-                }
+                    /* Glows amber when you tap into it */
+                    input[type="date"]:focus,
+                    input[type="number"]:focus {
+                      /* Remove default browser focus ring */
+                      outline: none;
+                      border-color: var(--accent);
+                    }
 
-            /* =====================
-            SCHEDULE OUTPUT
-            ===================== */
+                    /* =====================
+                    BUTTONS
+                    Big, responsive, satisfying to tap
+                    ===================== */
 
-                .schedule-list {
-                    margin-top: 16px;
-                }
+                    button {
+                      width: 100%;
+                      background-color: var(--accent);
+                      color: #1a1a2e;
+                      border: none;
+                      border-radius: 8px;
+                      padding: 16px;
+                      font-size: 1rem;
+                      font-weight: 700;
+                      letter-spacing: 0.03em;
+                      cursor: pointer;
+                      /* Smooth transitions for all state changes */
+                      transition:
+                        background-color 0.15s ease,
+                        transform 0.1s ease;
+                    }
 
-                .schedule-item {
-                    padding: 14px 0;
+                    /* Slightly darker when hovered on desktop */
+                    button:hover {
+                      background-color: var(--accent-hover);
+                    }
+
+                    /* Physically presses down when tapped - the Fisher-price moment */
+                    button:active {
+                      background-color: var(--accent-hover);
+                      transform: scale(0.98);
+                    }
+
+                    /* =====================
+                    RESULTS CONTAINER
+                    Hidden until JavaScript writes to it
+                    ===================== */
+
+                    .result {
+                      margin-top: 16px;
+                      padding: 16px;
+                      background-color: var(--bg);
+                      border-radius: 8px;
+                      border-left: 3px solid var(--accent);
+                    }
+
+                    .result p {
+                      color: var(--text-primary);
+                      font-size: 1rem;
+                      margin-bottom: 6px;
+                    }
+
+                    .result .edd {
+                      color: var(--accent);
+                      font-size: 1.3rem;
+                      font-weight: 700;
+                    }
+
+                    .result .ga {
+                      color: var(--text-secondary);
+                      font-size: 0.9rem;
+                    }
+
+                    /* Warning flag for discrepancies */
+                    .flag {
+                      margin-top: 10px;
+                      padding: 10px 12px;
+                      background-color: rgba(251, 146, 60, 0.15);
+                      border-left: 3px solid var(--flag);
+                      border-radius: 4px;
+                      color: var(--flag);
+                      font-size: 0.85rem;
+                    }
+
+                    /* =====================
+                GESTATIONAL AGE ROW
+                Weeks and days inputs sit side by side
+                ===================== */
+
+                    .ga-input-row {
+                      display: flex;
+                      gap: 12px;
+                      margin-bottom: 16px;
+                    }
+
+                    .ga-input-group {
+                      flex: 1;
+                      display: flex;
+                      flex-direction: column;
+                    }
+
+                    .ga-input-group input {
+                      margin-bottom: 4px;
+                    }
+
+                    /* Match ga-label style to our regular labels */
+                    .ga-label {
+                      display: block;
+                      color: var(--text-secondary);
+                      font-size: 0.85rem;
+                      font-weight: 500;
+                      letter-spacing: 0.03em;
+                      text-transform: uppercase;
+                      margin-bottom: 6px;
+                    }
+
+                    /* =====================
+                EMBRYO TYPE SELECTOR
+                Dropdown within ART card for Day 3 vs Day 5 selection
+                ===================== */
+
+                    #art-type {
+                      width: 100%;
+                      background-color: var(--bg);
+                      color: var(--text-primary);
+                      border: 1px solid var(--border);
+                      border-radius: 8px;
+                      padding: 14px 16px;
+                      font-size: 1rem;
+                      margin-bottom: 16px;
+                      cursor: pointer;
+                      transition: border-color 0.2s ease;
+                      color-scheme: dark;
+                      -webkit-appearance: none;
+                      appearance: none;
+                      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f59e0b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+                      background-repeat: no-repeat;
+                      background-position: right 16px center;
+                      padding-right: 40px;
+                    }
+
+                    #art-type:focus {
+                      outline: none;
+                      border-color: var(--accent);
+                    }
+
+                    /* =====================
+                RESULTS SECTION
+                Persistent accumulated results below the cards
+                ===================== */
+
+                    .results-section {
+                      background-color: var(--surface);
+                      border: 1px solid var(--border);
+                      border-radius: 12px;
+                      padding: 20px;
+                      margin-top: 8px;
+                    }
+
+                    .results-section h3 {
+                      color: var(--accent);
+                      font-size: 1rem;
+                      font-weight: 600;
+                      margin-bottom: 16px;
+                      text-transform: uppercase;
+                      letter-spacing: 0.08em;
+                    }
+
+                    .result-row {
+                    display: grid;
+                    grid-template-columns: 1fr auto;
+                    grid-template-rows: auto auto;
+                    align-items: center;
+                    padding: 10px 0;
                     border-bottom: 1px solid var(--border);
+                    gap: 4px 8px;
                 }
 
-                .schedule-item:last-child {
-                    border-bottom: none;
+                .method {
+                    grid-column: 1;
+                    grid-row: 1;
+                    color: var(--text-secondary);
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
                 }
 
-                .schedule-name {
+                  .result-row:last-of-type {
+                      border-bottom: none;
+                    }
+
+                  .edd-date {
+                    grid-column: 1;
+                    grid-row: 2;
                     color: var(--text-primary);
                     font-size: 1rem;
                     font-weight: 600;
-                    margin-bottom: 4px;
+                    white-space: nowrap;
                 }
 
-                .schedule-dates {
-                    color: var(--accent);
-                    font-size: 0.95rem;
-                    font-weight: 600;
-                    margin-bottom: 2px;
-                }
-
-                .schedule-ga {
+                .ga-today {
+                    grid-column: 1;
+                    grid-row: 3;
                     color: var(--text-secondary);
                     font-size: 0.85rem;
-                    margin-bottom: 4px;
                 }
 
-                .schedule-note {
-                    color: var(--flag);
-                    font-size: 0.8rem;
-                    font-style: italic;
-                    margin-top: 4px;
-                }
+                    /* =====================
+                USE EDD BUTTON
+                Small inline button on each result row
+                ===================== */
+
+                    .use-edd-btn {
+                      grid-column: 2;
+                      grid-row: 1 / 4;
+                      width: auto;
+                      background-color: transparent;
+                      color: var(--accent);
+                      border: 1px solid var(--accent);
+                      border-radius: 6px;
+                      padding: 4px 10px;
+                      font-size: 0.75rem;
+                      font-weight: 600;
+                      letter-spacing: 0.05em;
+                      white-space: nowrap;
+                    }
+
+                    .use-edd-btn:hover {
+                      background-color: var(--accent);
+                      color: #1a1a2e;
+                    }
+
+                    .use-edd-btn:active {
+                      transform: scale(0.98);
+                    }
+
+                    /* =====================
+                CARE TIMELINE
+                ===================== */
+
+                    .timeline-edd-row {
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      margin-bottom: 20px;
+                      padding-bottom: 16px;
+                      border-bottom: 1px solid var(--border);
+                    }
+
+                    .timeline-edd-row .use-edd-btn {
+                        display: none;
+                    }
+
+                    #care-timeline {
+                          margin-top: 20px;
+                      }
+
+                          .toggle-row {
+                            display: flex;
+                            justify-content: flex-end;
+                            align-items: center;
+                            gap: 10px
+                            margin-bottom: 20px;
+                          }
+
+                          .toggle-row label {
+                    padding-right: 4px;
+                      }
+
+                          .toggle-btn {
+                            width: auto;
+                            background-color: transparent;
+                            color: var(--text-secondary);
+                            border: 1px solid var(--border);
+                            border-radius: 6px;
+                            padding: 6px 16px;
+                            font-size: 0.85rem;
+                            font-weight: 600;
+                          }
+
+                          .toggle-btn.active {
+                            background-color: var(--accent);
+                            color: #1a1a2e;
+                            border-color: var(--accent);
+                          }
 
                 /* =====================
-         SHARE ROW
-         Copy and share buttons below the schedule
-         ===================== */
+                CHECKBOX
+                ===================== */
 
-      .share-row {
-          display: flex;
-          gap: 10px;
-          margin-top: 20px;
-          padding-top: 16px;
-          border-top: 1px solid var(--border);
-      }
+                    input[type="checkbox"] {
+                      width: 20px;
+                      height: 20px;
+                      accent-color: var(--accent);
+                      cursor: pointer;
+                      color-scheme: dark;
+                    }
 
-      .share-btn {
-          flex: 1;
-          background-color: transparent;
-          color: var(--accent);
-          border: 1px solid var(--accent);
-          border-radius: 8px;
-          padding: 12px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          letter-spacing: 0.03em;
-      }
+                /* =====================
+                SCHEDULE OUTPUT
+                ===================== */
 
-      .share-btn:hover {
-          background-color: var(--accent);
-          color: #1a1a2e;
-      }
+                    .schedule-list {
+                        margin-top: 16px;
+                    }
 
-      .share-btn:active {
-          transform: scale(0.98);
-      }/* =====================
-         SHARE ROW
-         Copy and share buttons below the schedule
-         ===================== */
+                    .schedule-item {
+                        padding: 14px 0;
+                        border-bottom: 1px solid var(--border);
+                    }
 
-      .share-row {
-          display: flex;
-          gap: 10px;
-          margin-top: 20px;
-          padding-top: 16px;
-          border-top: 1px solid var(--border);
-      }
+                    .schedule-item:last-child {
+                        border-bottom: none;
+                    }
 
-      .share-btn {
-          flex: 1;
-          background-color: transparent;
-          color: var(--accent);
-          border: 1px solid var(--accent);
-          border-radius: 8px;
-          padding: 12px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          letter-spacing: 0.03em;
-      }
+                    .schedule-name {
+                        color: var(--text-primary);
+                        font-size: 1rem;
+                        font-weight: 600;
+                        margin-bottom: 4px;
+                    }
 
-      .share-btn:hover {
-          background-color: var(--accent);
-          color: #1a1a2e;
-      }
+                    .schedule-dates {
+                        color: var(--accent);
+                        font-size: 0.95rem;
+                        font-weight: 600;
+                        margin-bottom: 2px;
+                    }
 
-      .share-btn:active {
-          transform: scale(0.98);
-      }
+                    .schedule-ga {
+                        color: var(--text-secondary);
+                        font-size: 0.85rem;
+                        margin-bottom: 4px;
+                    }
+
+                    .schedule-note {
+                        color: var(--flag);
+                        font-size: 0.8rem;
+                        font-style: italic;
+                        margin-top: 4px;
+                    }
+
+                    /* =====================
+              SHARE ROW
+              Copy and share buttons below the schedule
+              ===================== */
+
+              .share-row {
+                  display: flex;
+                  gap: 10px;
+                  margin-top: 20px;
+                  padding-top: 16px;
+                  border-top: 1px solid var(--border);
+              }
+
+              .share-btn {
+                  flex: 1;
+                  background-color: transparent;
+                  color: var(--accent);
+                  border: 1px solid var(--accent);
+                  border-radius: 8px;
+                  padding: 12px;
+                  font-size: 0.85rem;
+                  font-weight: 600;
+                  letter-spacing: 0.03em;
+              }
+
+              .share-btn:hover {
+                  background-color: var(--accent);
+                  color: #1a1a2e;
+              }
+
+              .share-btn:active {
+                  transform: scale(0.98);
+              }/* =====================
+                  SHARE ROW
+                  Copy and share buttons below the schedule
+                  ===================== */
+
+              .share-row {
+                  display: flex;
+                  gap: 10px;
+                  margin-top: 20px;
+                  padding-top: 16px;
+                  border-top: 1px solid var(--border);
+              }
+
+              .share-btn {
+                  flex: 1;
+                  background-color: transparent;
+                  color: var(--accent);
+                  border: 1px solid var(--accent);
+                  border-radius: 8px;
+                  padding: 12px;
+                  font-size: 0.85rem;
+                  font-weight: 600;
+                  letter-spacing: 0.03em;
+              }
+
+              .share-btn:hover {
+                  background-color: var(--accent);
+                  color: #1a1a2e;
+              }
+
+              .share-btn:active {
+                  transform: scale(0.98);
+              }
     </style>
   </head>
   <body>
     <header>
-      <h1>RM Tools</h1>
+      <div class="header-left">
+        <!-- Home icon and title both navigate to home screen -->
+        <span class="home-icon" onclick="navigateTo('home')">⌂</span>
+        <h1 onclick="navigateTo('home')">RM Tools</h1>
+      </div>
       <div class="header-controls">
         <select id="province-selector" onchange="saveProvince()">
           <option value="">Province</option>
@@ -630,11 +735,55 @@
           <option value="AB">AB</option>
           <option value="ON">ON</option>
         </select>
-        <button class="clear-btn" onclick="clearAll()">Clear</button>
+        <button class="clear-btn" id="clear-btn" onclick="clearAll()" style="display: none">Clear</button>
       </div>
     </header>
 
     <main>
+      <!-- =====================
+     HOME SCREEN
+     Landing page with tool buttons
+     ===================== -->
+      <section id="screen-home">
+        <div class="home-welcome">
+          <p class="home-subtitle">Clinical tools for registered midwives</p>
+        </div>
+
+        <div class="home-buttons">
+          <button class="home-tool-btn" onclick="navigateTo('edd')">
+            <span class="tool-icon">📅</span>
+            <div class="tool-info">
+              <span class="tool-name">EDD Calculator</span>
+              <span class="tool-desc">Calculate estimated due date</span>
+            </div>
+          </button>
+
+          <button class="home-tool-btn" onclick="navigateTo('planner')">
+            <span class="tool-icon">🗓️</span>
+            <div class="tool-info">
+              <span class="tool-name">Care Planner</span>
+              <span class="tool-desc">Prenatal care timeline by province</span>
+            </div>
+          </button>
+
+          <button class="home-tool-btn coming-soon">
+            <span class="tool-icon">👶</span>
+            <div class="tool-info">
+              <span class="tool-name">Newborn Tools</span>
+              <span class="tool-desc">Coming soon</span>
+            </div>
+          </button>
+
+          <button class="home-tool-btn coming-soon">
+            <span class="tool-icon">💊</span>
+            <div class="tool-info">
+              <span class="tool-name">ASA Decision Tree</span>
+              <span class="tool-desc">Coming soon</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
       <!-- =====================
          DUE DATE CALCULATOR
          Province selector and dating method selector
@@ -652,27 +801,9 @@
         <div class="selector-container">
           <label>Dating Method</label>
           <div class="segmented-control">
-            <button
-              class="segment-btn"
-              id="btn-lmp"
-              onclick="showDateCard('lmp')"
-            >
-              LMP
-            </button>
-            <button
-              class="segment-btn"
-              id="btn-us"
-              onclick="showDateCard('us')"
-            >
-              US
-            </button>
-            <button
-              class="segment-btn"
-              id="btn-art"
-              onclick="showDateCard('art')"
-            >
-              ART
-            </button>
+            <button class="segment-btn" id="btn-lmp" onclick="showDateCard('lmp')">LMP</button>
+            <button class="segment-btn" id="btn-us" onclick="showDateCard('us')">US</button>
+            <button class="segment-btn" id="btn-art" onclick="showDateCard('art')">ART</button>
           </div>
         </div>
 
@@ -693,11 +824,7 @@
 
         <!-- Ultrasound Card -->
         <!-- Hidden by default, shown when Ultrasound is selected -->
-        <section
-          class="calculator-card"
-          id="card-ultrasound"
-          style="display: none"
-        >
+        <section class="calculator-card" id="card-ultrasound" style="display: none">
           <h3>From Ultrasound</h3>
 
           <!-- We need two inputs - the date of the scan and the GA at the time -->
@@ -709,23 +836,11 @@
           <!-- Side by side inputs for weeks and days -->
           <div class="ga-input-row">
             <div class="ga-input-group">
-              <input
-                type="number"
-                id="us-weeks"
-                min="0"
-                max="42"
-                placeholder="Weeks"
-              />
+              <input type="number" id="us-weeks" min="0" max="42" placeholder="Weeks" />
               <span class="ga-label">weeks</span>
             </div>
             <div class="ga-input-group">
-              <input
-                type="number"
-                id="us-days"
-                min="0"
-                max="6"
-                placeholder="Days"
-              />
+              <input type="number" id="us-days" min="0" max="6" placeholder="Days" />
               <span class="ga-label">days</span>
             </div>
           </div>
@@ -764,11 +879,7 @@
      Accumulates EDDs as each method is calculated
      Discrepancy flags appear here when relevant
      ===================== -->
-        <section
-          class="results-section"
-          id="results-section"
-          style="display: none"
-        >
+        <section class="results-section" id="results-section" style="display: none">
           <h3>Calculated Dates</h3>
           <div id="results-lmp"></div>
           <div id="results-us"></div>
@@ -788,7 +899,7 @@
         <!-- Selected or manually entered EDD -->
         <div class="timeline-edd-row">
           <div>
-            <label>Working EDD</label>
+            <label id="working-edd-label" style="display: none">Working EDD</label>
             <p id="timeline-edd-display" class="edd"></p>
             <p id="timeline-edd-source" class="ga"></p>
             <p id="timeline-ga-display" class="ga"></p>
@@ -798,7 +909,7 @@
 
         <!-- Manual EDD entry -->
         <div id="manual-edd-section">
-          <label for="manual-edd">Or enter EDD directly</label>
+          <label for="manual-edd">Enter EDD directly</label>
           <input type="date" id="manual-edd" onchange="useManualEDD()" />
         </div>
 
@@ -813,15 +924,43 @@
         <!-- Share/Copy buttons -->
         <!-- Only visible once a schedule has been generated -->
         <div class="share-row" id="share-row" style="display: none">
-          <button class="share-btn" onclick="copyTimeline()">
-            Copy to Clipboard
-          </button>
+          <button class="share-btn" onclick="copyTimeline()">Copy to Clipboard</button>
           <button class="share-btn" onclick="shareTimeline()">Share</button>
         </div>
       </section>
     </main>
 
     <script>
+      // =====================
+      // NAVIGATION
+      // Shows the correct screen based on button tapped
+      // Manages Clear button visibility
+      // =====================
+
+      function navigateTo(screen) {
+        // Hide all screens
+        document.getElementById("screen-home").style.display = "none";
+        document.getElementById("calculator-section").style.display = "none";
+        document.getElementById("care-timeline").style.display = "none";
+
+        // Hide clear button by default
+        document.getElementById("clear-btn").style.display = "none";
+
+        if (screen === "home") {
+          document.getElementById("screen-home").style.display = "block";
+        } else if (screen === "edd") {
+          document.getElementById("calculator-section").style.display = "block";
+          document.getElementById("clear-btn").style.display = "block";
+        } else if (screen === "planner") {
+          document.getElementById("calculator-section").style.display = "block";
+          document.getElementById("care-timeline").style.display = "block";
+          document.getElementById("clear-btn").style.display = "block";
+        }
+      }
+
+      // Show home screen on load
+      navigateTo("home");
+
       // =====================
       // SHARED STATE
       // Stores EDDs from each method so they can be compared
@@ -1136,8 +1275,18 @@
         const lmp = new Date(workingEDD.getTime() - 280 * 24 * 60 * 60 * 1000);
         const today = new Date();
         const ga = getGestationalAge(lmp, today);
-        document.getElementById("timeline-ga-display").textContent =
-          `GA today: ${ga.weeks}w${ga.days}d`;
+        document.getElementById("timeline-ga-display").textContent = `GA today: ${ga.weeks}w${ga.days}d`;
+      }
+
+      function updateEditButton() {
+        const editBtn = document.querySelector(".timeline-edd-row .use-edd-btn");
+        const label = document.getElementById("working-edd-label");
+        if (editBtn) {
+          editBtn.style.display = workingEDD ? "block" : "none";
+        }
+        if (label) {
+          label.style.display = workingEDD ? "block" : "none";
+        }
       }
 
       // =====================
@@ -1212,9 +1361,7 @@
         // Determine trimester from US GA if available, otherwise LMP
         // US is most reliable for trimester determination
         const referenceEDD = calculatedEDDs.ultrasound || calculatedEDDs.lmp;
-        const correctedLMP = new Date(
-          referenceEDD.getTime() - 280 * 24 * 60 * 60 * 1000
-        );
+        const correctedLMP = new Date(referenceEDD.getTime() - 280 * 24 * 60 * 60 * 1000);
         const today = new Date();
         const ga = getGestationalAge(correctedLMP, today);
         const totalWeeks = ga.weeks;
@@ -1238,9 +1385,7 @@
         let discrepancyFound = false;
 
         if (hasLMPandUS) {
-          const diffMs = Math.abs(
-            calculatedEDDs.lmp.getTime() - calculatedEDDs.ultrasound.getTime()
-          );
+          const diffMs = Math.abs(calculatedEDDs.lmp.getTime() - calculatedEDDs.ultrasound.getTime());
           const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
           if (diffDays > threshold) {
             discrepancyFound = true;
@@ -1248,9 +1393,7 @@
         }
 
         if (hasARTandUS) {
-          const diffMs = Math.abs(
-            calculatedEDDs.art.getTime() - calculatedEDDs.ultrasound.getTime()
-          );
+          const diffMs = Math.abs(calculatedEDDs.art.getTime() - calculatedEDDs.ultrasound.getTime());
           const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
           if (diffDays > threshold) {
             discrepancyFound = true;
@@ -1310,6 +1453,7 @@
         // Reset care timeline
         workingEDD = null;
         workingEDDSource = null;
+        updateEditButton();
         includeNIPS = false;
         document.getElementById("nips-checkbox").checked = false;
         document.getElementById("manual-edd").value = "";
@@ -1318,11 +1462,13 @@
         document.getElementById("schedule-output").innerHTML = "";
         document.getElementById("care-timeline").style.display = "none";
         document.getElementById("share-row").style.display = "none";
+        document.getElementById("timeline-ga-display").textContent = "";
 
         // Reopen calculator
         document.getElementById("calculator-section").style.display = "block";
         // Hide results section until next calculation
         document.getElementById("results-section").style.display = "none";
+        navigateTo("home");
       }
 
       // =====================
@@ -1409,15 +1555,11 @@
         const daysRemaining = 280 - gaAtScanDays;
 
         // Calculate EDD - scan date + remaining days
-        const edd = new Date(
-          scanDate.getTime() + daysRemaining * 24 * 60 * 60 * 1000
-        );
+        const edd = new Date(scanDate.getTime() + daysRemaining * 24 * 60 * 60 * 1000);
 
         // Calculate GA today
         // We need the "corrected LMP" - work backwards from scan date
-        const correctedLMP = new Date(
-          scanDate.getTime() - gaAtScanDays * 24 * 60 * 60 * 1000
-        );
+        const correctedLMP = new Date(scanDate.getTime() - gaAtScanDays * 24 * 60 * 60 * 1000);
         const today = new Date();
         const ga = getGestationalAge(correctedLMP, today);
 
@@ -1479,15 +1621,11 @@
 
         // Calculate the EDD based on scanDate plus days to add
 
-        const edd = new Date(
-          transferDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000
-        );
+        const edd = new Date(transferDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
 
         // calculate the current gestation
 
-        const correctedLMP = new Date(
-          edd.getTime() - 280 * 24 * 60 * 60 * 1000
-        );
+        const correctedLMP = new Date(edd.getTime() - 280 * 24 * 60 * 60 * 1000);
         const today = new Date();
         const ga = getGestationalAge(correctedLMP, today);
 
@@ -1533,6 +1671,7 @@
       function useEDD(isoString, source) {
         workingEDD = new Date(isoString);
         workingEDDSource = source;
+        updateEditButton();
 
         // Collapse calculator
         document.getElementById("calculator-section").style.display = "none";
@@ -1541,10 +1680,8 @@
         const timeline = document.getElementById("care-timeline");
         timeline.style.display = "block";
 
-        document.getElementById("timeline-edd-display").textContent =
-          formatDate(workingEDD);
-        document.getElementById("timeline-edd-source").textContent =
-          `From ${source}`;
+        document.getElementById("timeline-edd-display").textContent = formatDate(workingEDD);
+        document.getElementById("timeline-edd-source").textContent = `From ${source}`;
 
         // Generate schedule
         generateSchedule();
@@ -1565,11 +1702,10 @@
 
         workingEDD = new Date(input + "T12:00:00");
         workingEDDSource = "Manual entry";
+        updateEditButton();
 
-        document.getElementById("timeline-edd-display").textContent =
-          formatDate(workingEDD);
-        document.getElementById("timeline-edd-source").textContent =
-          "Manually entered";
+        document.getElementById("timeline-edd-display").textContent = formatDate(workingEDD);
+        document.getElementById("timeline-edd-source").textContent = "Manually entered";
 
         generateSchedule();
         updateGADisplay();
@@ -1581,9 +1717,7 @@
       // =====================
       function openCalculator() {
         document.getElementById("calculator-section").style.display = "block";
-        document
-          .getElementById("calculator-section")
-          .scrollIntoView({ behavior: "smooth" });
+        document.getElementById("calculator-section").scrollIntoView({ behavior: "smooth" });
       }
 
       // =====================
@@ -1638,8 +1772,7 @@
 
           // Calculate start and end dates
           const startDate = getDate(test.startWeek, test.startDay);
-          const endDate =
-            test.endWeek !== null ? getDate(test.endWeek, test.endDay) : null;
+          const endDate = test.endWeek !== null ? getDate(test.endWeek, test.endDay) : null;
 
           // Format the gestational age window
           const gaWindow =
@@ -1675,9 +1808,7 @@
 
       function buildShareText() {
         const edd = document.getElementById("timeline-edd-display").textContent;
-        const source = document.getElementById(
-          "timeline-edd-source"
-        ).textContent;
+        const source = document.getElementById("timeline-edd-source").textContent;
         const ga = document.getElementById("timeline-ga-display").textContent;
         const province = document.getElementById("province-selector").value;
 
