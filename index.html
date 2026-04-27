@@ -57,6 +57,14 @@
             </div>
           </button>
 
+          <button class="home-tool-btn" onclick="navigateTo('prenatal-tools')">
+            <span class="tool-icon">🩺</span>
+            <div class="tool-info">
+              <span class="tool-name">Prenatal Tools</span>
+              <span class="tool-desc">BMI calculator, Bishop score, and more</span>
+            </div>
+          </button>
+
           <button class="home-tool-btn" onclick="navigateTo('newborn')">
             <span class="tool-icon">👶</span>
             <div class="tool-info">
@@ -138,7 +146,86 @@
           </div>
         </div>
       </section>
+      <!-- =====================
+     PRENATAL TOOLS
+     ===================== -->
+      <section id="screen-prenatal-tools" style="display: none">
+        <!-- Prenatal Tools Menu -->
+        <div id="prenatal-tools-menu">
+          <div class="home-buttons">
+            <button class="home-tool-btn" onclick="navigateTo('bmi')">
+              <span class="tool-icon">⚖️</span>
+              <div class="tool-info">
+                <span class="tool-name">BMI & Unit Converter</span>
+                <span class="tool-desc">Calculate BMI and convert height and weight</span>
+              </div>
+            </button>
 
+            <button class="home-tool-btn coming-soon">
+              <span class="tool-icon">📋</span>
+              <div class="tool-info">
+                <span class="tool-name">Bishop Score</span>
+                <span class="tool-desc">Coming soon</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- BMI Calculator -->
+        <div id="tool-bmi" style="display: none">
+          <button class="back-btn" onclick="navigateTo('prenatal-tools')">← Prenatal Tools</button>
+
+          <div class="calculator-card">
+            <div class="card-header-row">
+              <h3>BMI & Unit Converter</h3>
+              <button class="clear-card-btn" onclick="clearBMI()">Clear</button>
+            </div>
+            <p class="tool-intro">Calculates BMI and converts height and weight</p>
+
+            <!-- Unit selector -->
+            <div class="toggle-row">
+              <label>Units</label>
+              <div class="segmented-control">
+                <button class="segment-btn active" id="btn-imperial" onclick="selectBMIUnit('imperial')">
+                  lbs / ft
+                </button>
+                <button class="segment-btn" id="btn-metric" onclick="selectBMIUnit('metric')">kg / cm</button>
+              </div>
+            </div>
+
+            <!-- Imperial inputs -->
+            <div id="bmi-input-imperial">
+              <label>Height</label>
+              <div class="ga-input-row">
+                <div class="ga-input-group">
+                  <input type="number" id="height-ft" min="0" max="8" placeholder="ft" />
+                  <span class="ga-label">ft</span>
+                </div>
+                <div class="ga-input-group">
+                  <input type="number" id="height-in" min="0" max="11" placeholder="in" />
+                  <span class="ga-label">in</span>
+                </div>
+              </div>
+
+              <label for="weight-lbs">Weight</label>
+              <input type="number" id="weight-lbs" placeholder="lbs" />
+            </div>
+
+            <!-- Metric inputs -->
+            <div id="bmi-input-metric" style="display: none">
+              <label for="height-cm">Height</label>
+              <input type="number" id="height-cm" placeholder="cm" />
+
+              <label for="weight-kg">Weight</label>
+              <input type="number" id="weight-kg" placeholder="kg" />
+            </div>
+
+            <button onclick="calculateBMI()">Calculate BMI</button>
+
+            <div id="bmi-result"></div>
+          </div>
+        </div>
+      </section>
       <!-- Weight Loss Calculator -->
       <div id="tool-weight-loss" style="display: none">
         <button class="back-btn" onclick="navigateTo('newborn')">← Newborn Tools</button>
