@@ -13,6 +13,10 @@ function navigateTo(screen) {
   document.getElementById("newborn-menu").style.display = "none";
   document.getElementById("tool-age-in-hours").style.display = "none";
   document.getElementById("tool-weight-loss").style.display = "none";
+  document.getElementById("screen-prenatal-tools").style.display = "none";
+  document.getElementById("prenatal-tools-menu").style.display = "none";
+  document.getElementById("tool-bmi").style.display = "none";
+  document.getElementById("tool-bishop").style.display = "none";
 
   // Hide clear button by default
   document.getElementById("clear-btn").style.display = "none";
@@ -35,6 +39,15 @@ function navigateTo(screen) {
   } else if (screen === "weight-loss") {
     document.getElementById("screen-newborn").style.display = "block";
     document.getElementById("tool-weight-loss").style.display = "block";
+  } else if (screen === "prenatal-tools") {
+    document.getElementById("screen-prenatal-tools").style.display = "block";
+    document.getElementById("prenatal-tools-menu").style.display = "block";
+  } else if (screen === "bmi") {
+    document.getElementById("screen-prenatal-tools").style.display = "block";
+    document.getElementById("tool-bmi").style.display = "block";
+  } else if (screen === "bishop") {
+    document.getElementById("screen-prenatal-tools").style.display = "block";
+    document.getElementById("tool-bishop").style.display = "block";
   }
 }
 
@@ -1127,4 +1140,182 @@ function clearWeightLoss() {
   document.getElementById("current-weight-lbs").value = "";
   document.getElementById("current-weight-oz").value = "";
   document.getElementById("weight-loss-result").innerHTML = "";
+}
+
+// =====================
+// BMI & UNIT CONVERTER
+// Defaults to imperial (lbs/ft/in)
+// Converts to metric for display and BMI calculation
+// WHO categories displayed, interpretation left to clinician
+// =====================
+
+let bmiUnit = "imperial";
+
+function selectBMIUnit(unit) {
+  bmiUnit = unit;
+
+  // Update segmented control
+  document.getElementById("btn-imperial").classList.toggle("active", unit === "imperial");
+  document.getElementById("btn-metric").classList.toggle("active", unit === "metric");
+
+  // Show/hide correct inputs
+  document.getElementById("bmi-input-imperial").style.display = unit === "imperial" ? "block" : "none";
+  document.getElementById("bmi-input-metric").style.display = unit === "metric" ? "block" : "none";
+
+  // Clear result
+  document.getElementById("bmi-result").innerHTML = "";
+}
+
+function calculateBMI() {
+  let heightCm, weightKg;
+
+  if (bmiUnit === "imperial") {
+    const ft = parseFloat(document.getElementById("height-ft").value) || 0;
+    const inches = parseFloat(document.getElementById("height-in").value) || 0;
+    const lbs = parseFloat(document.getElementById("weight-lbs").value);
+
+    if ((!ft && !inches) || !lbs) {
+      document.getElementById("bmi-result").innerHTML = `
+                <div class="flag">⚠ Please enter height and weight.</div>
+            `;
+      return;
+    }
+
+    // Convert to metric
+    const totalInches = ft * 12 + inches;
+    heightCm = totalInches * 2.54;
+    weightKg = lbs * 0.453592;
+  } else {
+    heightCm = parseFloat(document.getElementById("height-cm").value);
+    weightKg = parseFloat(document.getElementById("weight-kg").value);
+
+    if (!heightCm || !weightKg) {
+      document.getElementById("bmi-result").innerHTML = `
+                <div class="flag">⚠ Please enter height and weight.</div>
+            `;
+      return;
+    }
+  }
+
+  // Calculate BMI
+  const heightM = heightCm / 100;
+  const bmi = weightKg / (heightM * heightM);
+  const bmiRounded = Math.round(bmi * 10) / 10;
+
+  // WHO category
+  let category;
+  if (bmi < 18.5) {
+    category = "Underweight";
+  } else if (bmi < 25) {
+    category = "Normal weight";
+  } else if (bmi < 30) {
+    category = "Overweight";
+  } else {
+    category = "Obese";
+  }
+
+  // Convert for display
+  const weightLbs = Math.round(weightKg * 2.20462 * 10) / 10;
+  const heightTotalInches = heightCm / 2.54;
+  const heightFt = Math.floor(heightTotalInches / 12);
+  const heightIn = Math.round((heightTotalInches % 12) * 10) / 10;
+  const weightKgRounded = Math.round(weightKg * 10) / 10;
+  const heightCmRounded = Math.round(heightCm * 10) / 10;
+
+  document.getElementById("bmi-result").innerHTML = `
+        <div class="result">
+            <p>BMI</p>
+            <p class="edd">${bmiRounded}</p>
+            <p class="ga">${category}</p>
+            <br>
+            <p class="ga">Height: ${heightFt}ft ${heightIn}in &nbsp;|&nbsp; ${heightCmRounded}cm</p>
+            <p class="ga">Weight: ${weightLbs}lbs &nbsp;|&nbsp; ${weightKgRounded}kg</p>
+        </div>
+    `;
+}
+
+function clearBMI() {
+  document.getElementById("height-ft").value = "";
+  document.getElementById("height-in").value = "";
+  document.getElementById("weight-lbs").value = "";
+  document.getElementById("height-cm").value = "";
+  document.getElementById("weight-kg").value = "";
+  document.getElementById("bmi-result").innerHTML = "";
+}
+
+// =====================
+// BISHOP SCORE CALCULATOR
+// Real-time scoring — updates as each component is tapped
+// No calculate button needed
+// =====================
+
+const bishopScores = {
+  dilation: null,
+  effacement: null,
+  station: null,
+  consistency: null,
+  position: null
+};
+
+function setBishop(component, score, btn) {
+  // Update score
+  bishopScores[component] = score;
+
+  // Update button styles for this row
+  const row = btn.parentElement;
+  row.querySelectorAll(".bishop-btn").forEach((b) => b.classList.remove("selected"));
+  btn.classList.add("selected");
+
+  // Update result
+  updateBishopResult();
+}
+
+function updateBishopResult() {
+  const scores = Object.values(bishopScores);
+  const answered = scores.filter((s) => s !== null).length;
+
+  // Don't show result until all components scored
+  if (answered < 5) {
+    document.getElementById("bishop-result").innerHTML = `
+            <div class="result">
+                <p>Score</p>
+                <p class="edd">—</p>
+                <p class="ga">${answered} of 5 components scored</p>
+            </div>
+        `;
+    return;
+  }
+
+  const total = scores.reduce((sum, s) => sum + Number(s), 0);
+
+  let interpretation, flagClass;
+  if (total >= 8) {
+    interpretation = "Favorable — cervix ripe for induction";
+    flagClass = "flag-green";
+  } else if (total >= 6) {
+    interpretation = "Borderline";
+    flagClass = "flag-amber";
+  } else {
+    interpretation = "Unfavorable — cervix not ripe";
+    flagClass = "flag";
+  }
+
+  document.getElementById("bishop-result").innerHTML = `
+        <div class="result">
+            <p>Bishop Score</p>
+            <p class="edd">${total} / 13</p>
+        </div>
+        <div class="${flagClass}">${interpretation}</div>
+    `;
+}
+
+function clearBishop() {
+  // Reset all scores
+  Object.keys(bishopScores).forEach((k) => (bishopScores[k] = null));
+
+  // Remove selected class from all buttons
+  document.querySelectorAll(".bishop-btn").forEach((b) => b.classList.remove("selected"));
+
+  // Clear result
+  document.getElementById("bishop-result").innerHTML = "";
 }

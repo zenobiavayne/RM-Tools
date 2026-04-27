@@ -57,6 +57,14 @@
             </div>
           </button>
 
+          <button class="home-tool-btn" onclick="navigateTo('prenatal-tools')">
+            <span class="tool-icon">🩺</span>
+            <div class="tool-info">
+              <span class="tool-name">Prenatal Tools</span>
+              <span class="tool-desc">BMI calculator, Bishop score, and more</span>
+            </div>
+          </button>
+
           <button class="home-tool-btn" onclick="navigateTo('newborn')">
             <span class="tool-icon">👶</span>
             <div class="tool-info">
@@ -138,7 +146,145 @@
           </div>
         </div>
       </section>
+      <!-- =====================
+     PRENATAL TOOLS
+     ===================== -->
+      <section id="screen-prenatal-tools" style="display: none">
+        <!-- Prenatal Tools Menu -->
+        <div id="prenatal-tools-menu">
+          <div class="home-buttons">
+            <button class="home-tool-btn" onclick="navigateTo('bmi')">
+              <span class="tool-icon">⚖️</span>
+              <div class="tool-info">
+                <span class="tool-name">BMI & Unit Converter</span>
+                <span class="tool-desc">Calculate BMI and convert height and weight</span>
+              </div>
+            </button>
 
+            <button class="home-tool-btn" onclick="navigateTo('bishop')">
+              <span class="tool-icon">📋</span>
+              <div class="tool-info">
+                <span class="tool-name">Bishop Score</span>
+                <span class="tool-desc">Cervical favorability for induction</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- BMI Calculator -->
+        <div id="tool-bmi" style="display: none">
+          <button class="back-btn" onclick="navigateTo('prenatal-tools')">← Prenatal Tools</button>
+
+          <div class="calculator-card">
+            <div class="card-header-row">
+              <h3>BMI & Unit Converter</h3>
+              <button class="clear-card-btn" onclick="clearBMI()">Clear</button>
+            </div>
+            <p class="tool-intro">Calculates BMI and converts height and weight</p>
+
+            <!-- Unit selector -->
+            <div class="toggle-row">
+              <label>Units</label>
+              <div class="segmented-control">
+                <button class="segment-btn active" id="btn-imperial" onclick="selectBMIUnit('imperial')">
+                  lbs / ft
+                </button>
+                <button class="segment-btn" id="btn-metric" onclick="selectBMIUnit('metric')">kg / cm</button>
+              </div>
+            </div>
+
+            <!-- Imperial inputs -->
+            <div id="bmi-input-imperial">
+              <label>Height</label>
+              <div class="ga-input-row">
+                <div class="ga-input-group">
+                  <input type="number" id="height-ft" min="0" max="8" placeholder="ft" />
+                  <span class="ga-label">ft</span>
+                </div>
+                <div class="ga-input-group">
+                  <input type="number" id="height-in" min="0" max="11" placeholder="in" />
+                  <span class="ga-label">in</span>
+                </div>
+              </div>
+
+              <label for="weight-lbs">Weight</label>
+              <input type="number" id="weight-lbs" placeholder="lbs" />
+            </div>
+
+            <!-- Metric inputs -->
+            <div id="bmi-input-metric" style="display: none">
+              <label for="height-cm">Height</label>
+              <input type="number" id="height-cm" placeholder="cm" />
+
+              <label for="weight-kg">Weight</label>
+              <input type="number" id="weight-kg" placeholder="kg" />
+            </div>
+
+            <button onclick="calculateBMI()">Calculate BMI</button>
+
+            <div id="bmi-result"></div>
+          </div>
+        </div>
+
+        <!-- Bishop Score Calculator -->
+        <div id="tool-bishop" style="display: none">
+          <button class="back-btn" onclick="navigateTo('prenatal-tools')">← Prenatal Tools</button>
+
+          <div class="calculator-card">
+            <div class="card-header-row">
+              <h3>Bishop Score</h3>
+              <button class="clear-card-btn" onclick="clearBishop()">Clear</button>
+            </div>
+            <p class="tool-intro">Cervical favorability for induction of labour</p>
+
+            <!-- Dilation -->
+            <label>Dilation</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="dilation-0" onclick="setBishop('dilation', 0, this)">Closed</button>
+              <button class="bishop-btn" id="dilation-1" onclick="setBishop('dilation', 1, this)">1–2cm</button>
+              <button class="bishop-btn" id="dilation-2" onclick="setBishop('dilation', 2, this)">3–4cm</button>
+              <button class="bishop-btn" id="dilation-3" onclick="setBishop('dilation', 3, this)">5–6cm</button>
+            </div>
+
+            <!-- Effacement -->
+            <label>Effacement</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="effacement-0" onclick="setBishop('effacement', 0, this)">0–30%</button>
+              <button class="bishop-btn" id="effacement-1" onclick="setBishop('effacement', 1, this)">40–50%</button>
+              <button class="bishop-btn" id="effacement-2" onclick="setBishop('effacement', 2, this)">60–70%</button>
+              <button class="bishop-btn" id="effacement-3" onclick="setBishop('effacement', 3, this)">80%+</button>
+            </div>
+
+            <!-- Station -->
+            <label>Station</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="station-0" onclick="setBishop('station', 0, this)">-3</button>
+              <button class="bishop-btn" id="station-1" onclick="setBishop('station', 1, this)">-2</button>
+              <button class="bishop-btn" id="station-2" onclick="setBishop('station', 2, this)">-1/0</button>
+              <button class="bishop-btn" id="station-3" onclick="setBishop('station', 3, this)">+1/+2</button>
+            </div>
+
+            <!-- Consistency -->
+            <label>Consistency</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="consistency-0" onclick="setBishop('consistency', 0, this)">Firm</button>
+              <button class="bishop-btn" id="consistency-1" onclick="setBishop('consistency', 1, this)">Medium</button>
+              <button class="bishop-btn" id="consistency-2" onclick="setBishop('consistency', 2, this)">Soft</button>
+            </div>
+
+            <!-- Position -->
+            <label>Position</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="position-0" onclick="setBishop('position', 0, this)">Posterior</button>
+              <button class="bishop-btn" id="position-1" onclick="setBishop('position', 1, this)">Mid</button>
+              <button class="bishop-btn" id="position-2" onclick="setBishop('position', 2, this)">Anterior</button>
+            </div>
+
+            <!-- Live result -->
+            <div id="bishop-result"></div>
+          </div>
+        </div>
+      </section>
       <!-- Weight Loss Calculator -->
       <div id="tool-weight-loss" style="display: none">
         <button class="back-btn" onclick="navigateTo('newborn')">← Newborn Tools</button>

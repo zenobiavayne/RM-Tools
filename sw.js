@@ -4,7 +4,7 @@
 // Auto-updates silently when new version is deployed
 // =====================
 
-const CACHE_NAME = "rm-tools-v2";
+const CACHE_NAME = "rm-tools-v3";
 
 // Files to cache for offline use
 const CACHE_FILES = [
