@@ -254,6 +254,7 @@ Three side-by-side buttons for dating method selection
     font-size: 0.9rem;
     font-weight: 600;
     letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
 .segment-btn:hover {

@@ -90,6 +90,14 @@
               </div>
             </button>
 
+            <button class="home-tool-btn" onclick="navigateTo('weight-loss')">
+              <span class="tool-icon">⚖️</span>
+              <div class="tool-info">
+                <span class="tool-name">Weight Loss Calculator</span>
+                <span class="tool-desc">Track newborn weight loss percentage</span>
+              </div>
+            </button>
+
             <button class="home-tool-btn coming-soon">
               <span class="tool-icon">⚖️</span>
               <div class="tool-info">
@@ -130,6 +138,68 @@
           </div>
         </div>
       </section>
+
+      <!-- Weight Loss Calculator -->
+      <div id="tool-weight-loss" style="display: none">
+        <button class="back-btn" onclick="navigateTo('newborn')">← Newborn Tools</button>
+
+        <div class="calculator-card">
+          <div class="card-header-row">
+            <h3>Weight Loss Calculator</h3>
+            <button class="clear-card-btn" onclick="clearWeightLoss()">Clear</button>
+          </div>
+          <p class="tool-intro">Flags >7% and >10% loss from birth weight</p>
+
+          <!-- Unit selector -->
+          <div class="toggle-row">
+            <label>Units</label>
+            <div class="segmented-control">
+              <button class="segment-btn" id="btn-grams" onclick="selectWeightUnit('grams')">Grams</button>
+              <button class="segment-btn active" id="btn-lbs" onclick="selectWeightUnit('lbs')">lbs / oz</button>
+            </div>
+          </div>
+
+          <!-- Grams inputs -->
+          <div id="weight-input-grams" style="display: none">
+            <label for="birth-weight-g">Birth Weight (g)</label>
+            <input type="number" id="birth-weight-g" placeholder="e.g. 3400" />
+
+            <label for="current-weight-g">Current Weight (g)</label>
+            <input type="number" id="current-weight-g" placeholder="e.g. 3200" />
+          </div>
+
+          <!-- Lbs/oz inputs -->
+          <div id="weight-input-lbs">
+            <label>Birth Weight</label>
+            <div class="ga-input-row">
+              <div class="ga-input-group">
+                <input type="number" id="birth-weight-lbs" min="0" placeholder="lbs" />
+                <span class="ga-label">lbs</span>
+              </div>
+              <div class="ga-input-group">
+                <input type="number" id="birth-weight-oz" min="0" max="15" placeholder="oz" />
+                <span class="ga-label">oz</span>
+              </div>
+            </div>
+
+            <label>Current Weight</label>
+            <div class="ga-input-row">
+              <div class="ga-input-group">
+                <input type="number" id="current-weight-lbs" min="0" placeholder="lbs" />
+                <span class="ga-label">lbs</span>
+              </div>
+              <div class="ga-input-group">
+                <input type="number" id="current-weight-oz" min="0" max="15" placeholder="oz" />
+                <span class="ga-label">oz</span>
+              </div>
+            </div>
+          </div>
+
+          <button onclick="calculateWeightLoss()">Calculate</button>
+
+          <div id="weight-loss-result"></div>
+        </div>
+      </div>
 
       <!-- =====================
          DUE DATE CALCULATOR
