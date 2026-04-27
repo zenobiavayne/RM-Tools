@@ -8,6 +8,31 @@ RM Tools was built because I was tired of not having a centralized place to acce
 
 **Live app:** [zenobiavayne.github.io/RM-Tools](https://zenobiavayne.github.io/RM-Tools)
 
+## Installing RM Tools on Your Device
+
+RM Tools is a Progressive Web App (PWA) — it can be installed on your device and used like a native app, including offline.
+
+### iPhone / iPad
+1. Open [zenobiavayne.github.io/RM-Tools](https://zenobiavayne.github.io/RM-Tools) in **Safari**
+2. Tap the **Share** button (box with arrow pointing up)
+3. Scroll down and tap **"Add to Home Screen"**
+4. Tap **"Add"**
+
+### Android
+1. Open [zenobiavayne.github.io/RM-Tools](https://zenobiavayne.github.io/RM-Tools) in **Chrome**
+2. Tap the **three dots menu** (top right)
+3. Tap **"Add to Home Screen"**
+4. Tap **"Add"**
+
+> Note: On Android, Chrome may show an automatic install banner at the bottom of the screen — you can tap that instead.
+
+### Desktop (Chrome)
+1. Open [zenobiavayne.github.io/RM-Tools](https://zenobiavayne.github.io/RM-Tools) in Chrome
+2. Look for the **install icon** in the address bar (a monitor with a down arrow)
+3. Click it and follow the prompt
+
+Once installed, RM Tools works fully offline — no internet connection required after the first load.
+
 ---
 
 ## Features
