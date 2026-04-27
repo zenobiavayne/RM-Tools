@@ -12,6 +12,7 @@ function navigateTo(screen) {
   document.getElementById("screen-newborn").style.display = "none";
   document.getElementById("newborn-menu").style.display = "none";
   document.getElementById("tool-age-in-hours").style.display = "none";
+  document.getElementById("tool-weight-loss").style.display = "none";
 
   // Hide clear button by default
   document.getElementById("clear-btn").style.display = "none";
@@ -31,6 +32,9 @@ function navigateTo(screen) {
   } else if (screen === "age-in-hours") {
     document.getElementById("screen-newborn").style.display = "block";
     document.getElementById("tool-age-in-hours").style.display = "block";
+  } else if (screen === "weight-loss") {
+    document.getElementById("screen-newborn").style.display = "block";
+    document.getElementById("tool-weight-loss").style.display = "block";
   }
 }
 
@@ -1004,4 +1008,123 @@ function calculateAgeInHours() {
 
 function openHyperbili() {
   window.open("https://hyperbili.com", "_blank");
+}
+
+// =====================
+// NEWBORN WEIGHT LOSS CALCULATOR
+// Calculates percentage weight loss from birth weight
+// Flags >7% (monitor) and >10% (significant)
+// Displays result in both grams and lbs/oz
+// =====================
+
+let weightUnit = "lbs";
+
+function selectWeightUnit(unit) {
+  weightUnit = unit;
+
+  // Update segmented control
+  document.getElementById("btn-grams").classList.toggle("active", unit === "grams");
+  document.getElementById("btn-lbs").classList.toggle("active", unit === "lbs");
+
+  // Show/hide correct inputs
+  document.getElementById("weight-input-grams").style.display = unit === "grams" ? "block" : "none";
+  document.getElementById("weight-input-lbs").style.display = unit === "lbs" ? "block" : "none";
+
+  // Clear result
+  document.getElementById("weight-loss-result").innerHTML = "";
+}
+
+// Convert grams to lbs and oz
+function gramsToLbsOz(grams) {
+  const totalOz = grams / 28.3495;
+  const lbs = Math.floor(totalOz / 16);
+  const oz = Math.round((totalOz % 16) * 10) / 10;
+  return { lbs, oz };
+}
+
+// Convert lbs/oz to grams
+function lbsOzToGrams(lbs, oz) {
+  return lbs * 453.592 + oz * 28.3495;
+}
+
+function calculateWeightLoss() {
+  let birthGrams, currentGrams;
+
+  if (weightUnit === "grams") {
+    birthGrams = parseFloat(document.getElementById("birth-weight-g").value);
+    currentGrams = parseFloat(document.getElementById("current-weight-g").value);
+
+    if (!birthGrams || !currentGrams) {
+      document.getElementById("weight-loss-result").innerHTML = `
+                <div class="flag">⚠ Please enter both birth and current weight.</div>
+            `;
+      return;
+    }
+  } else {
+    const birthLbs = parseFloat(document.getElementById("birth-weight-lbs").value) || 0;
+    const birthOz = parseFloat(document.getElementById("birth-weight-oz").value) || 0;
+    const currentLbs = parseFloat(document.getElementById("current-weight-lbs").value) || 0;
+    const currentOz = parseFloat(document.getElementById("current-weight-oz").value) || 0;
+
+    if ((!birthLbs && !birthOz) || (!currentLbs && !currentOz)) {
+      document.getElementById("weight-loss-result").innerHTML = `
+                <div class="flag">⚠ Please enter both birth and current weight.</div>
+            `;
+      return;
+    }
+
+    birthGrams = lbsOzToGrams(birthLbs, birthOz);
+    currentGrams = lbsOzToGrams(currentLbs, currentOz);
+  }
+
+  // Check current weight isn't higher than birth weight
+  if (currentGrams > birthGrams) {
+    document.getElementById("weight-loss-result").innerHTML = `
+            <div class="flag">⚠ Current weight is higher than birth weight — please check values.</div>
+        `;
+    return;
+  }
+
+  // Calculate loss
+  const lossGrams = birthGrams - currentGrams;
+  const lossPercent = (lossGrams / birthGrams) * 100;
+  const lossPercentRounded = Math.round(lossPercent * 10) / 10;
+
+  // Convert for display
+  const birthLbsOz = gramsToLbsOz(birthGrams);
+  const currentLbsOz = gramsToLbsOz(currentGrams);
+  const lossLbsOz = gramsToLbsOz(lossGrams);
+  const lossDisplay = lossLbsOz.lbs > 0 ? `${lossLbsOz.lbs}lb ${lossLbsOz.oz}oz` : `${lossLbsOz.oz}oz`;
+
+  // Determine flag
+  let flagHTML = "";
+  if (lossPercent >= 10) {
+    flagHTML = `<div class="flag">🚨 Weight loss >10% — significant, requires assessment.</div>`;
+  } else if (lossPercent >= 7) {
+    flagHTML = `<div class="flag">⚠ Weight loss 7–10% — monitor closely.</div>`;
+  } else {
+    flagHTML = `<div class="flag" style="border-color: #22c55e; color: #22c55e; background-color: rgba(34, 197, 94, 0.1);">✅ Weight loss <7% — within normal range.</div>`;
+  }
+
+  document.getElementById("weight-loss-result").innerHTML = `
+        <div class="result">
+            <p>Weight Loss</p>
+            <p class="edd">${lossPercentRounded}%</p>
+            <p class="ga">${Math.round(lossGrams)}g &nbsp;|&nbsp; ${lossDisplay}</p>
+            <br>
+            <p class="ga">Birth: ${Math.round(birthGrams)}g &nbsp;|&nbsp; ${birthLbsOz.lbs}lb ${birthLbsOz.oz}oz</p>
+            <p class="ga">Current: ${Math.round(currentGrams)}g &nbsp;|&nbsp; ${currentLbsOz.lbs}lb ${currentLbsOz.oz}oz</p>
+        </div>
+        ${flagHTML}
+    `;
+}
+
+function clearWeightLoss() {
+  document.getElementById("birth-weight-g").value = "";
+  document.getElementById("current-weight-g").value = "";
+  document.getElementById("birth-weight-lbs").value = "";
+  document.getElementById("birth-weight-oz").value = "";
+  document.getElementById("current-weight-lbs").value = "";
+  document.getElementById("current-weight-oz").value = "";
+  document.getElementById("weight-loss-result").innerHTML = "";
 }
