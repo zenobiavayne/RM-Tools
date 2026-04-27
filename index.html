@@ -161,11 +161,11 @@
               </div>
             </button>
 
-            <button class="home-tool-btn coming-soon">
+            <button class="home-tool-btn" onclick="navigateTo('bishop')">
               <span class="tool-icon">📋</span>
               <div class="tool-info">
                 <span class="tool-name">Bishop Score</span>
-                <span class="tool-desc">Coming soon</span>
+                <span class="tool-desc">Cervical favorability for induction</span>
               </div>
             </button>
           </div>
@@ -223,6 +223,65 @@
             <button onclick="calculateBMI()">Calculate BMI</button>
 
             <div id="bmi-result"></div>
+          </div>
+        </div>
+
+        <!-- Bishop Score Calculator -->
+        <div id="tool-bishop" style="display: none">
+          <button class="back-btn" onclick="navigateTo('prenatal-tools')">← Prenatal Tools</button>
+
+          <div class="calculator-card">
+            <div class="card-header-row">
+              <h3>Bishop Score</h3>
+              <button class="clear-card-btn" onclick="clearBishop()">Clear</button>
+            </div>
+            <p class="tool-intro">Cervical favorability for induction of labour</p>
+
+            <!-- Dilation -->
+            <label>Dilation</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="dilation-0" onclick="setBishop('dilation', 0, this)">Closed</button>
+              <button class="bishop-btn" id="dilation-1" onclick="setBishop('dilation', 1, this)">1–2cm</button>
+              <button class="bishop-btn" id="dilation-2" onclick="setBishop('dilation', 2, this)">3–4cm</button>
+              <button class="bishop-btn" id="dilation-3" onclick="setBishop('dilation', 3, this)">5–6cm</button>
+            </div>
+
+            <!-- Effacement -->
+            <label>Effacement</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="effacement-0" onclick="setBishop('effacement', 0, this)">0–30%</button>
+              <button class="bishop-btn" id="effacement-1" onclick="setBishop('effacement', 1, this)">40–50%</button>
+              <button class="bishop-btn" id="effacement-2" onclick="setBishop('effacement', 2, this)">60–70%</button>
+              <button class="bishop-btn" id="effacement-3" onclick="setBishop('effacement', 3, this)">80%+</button>
+            </div>
+
+            <!-- Station -->
+            <label>Station</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="station-0" onclick="setBishop('station', 0, this)">-3</button>
+              <button class="bishop-btn" id="station-1" onclick="setBishop('station', 1, this)">-2</button>
+              <button class="bishop-btn" id="station-2" onclick="setBishop('station', 2, this)">-1/0</button>
+              <button class="bishop-btn" id="station-3" onclick="setBishop('station', 3, this)">+1/+2</button>
+            </div>
+
+            <!-- Consistency -->
+            <label>Consistency</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="consistency-0" onclick="setBishop('consistency', 0, this)">Firm</button>
+              <button class="bishop-btn" id="consistency-1" onclick="setBishop('consistency', 1, this)">Medium</button>
+              <button class="bishop-btn" id="consistency-2" onclick="setBishop('consistency', 2, this)">Soft</button>
+            </div>
+
+            <!-- Position -->
+            <label>Position</label>
+            <div class="bishop-row">
+              <button class="bishop-btn" id="position-0" onclick="setBishop('position', 0, this)">Posterior</button>
+              <button class="bishop-btn" id="position-1" onclick="setBishop('position', 1, this)">Mid</button>
+              <button class="bishop-btn" id="position-2" onclick="setBishop('position', 2, this)">Anterior</button>
+            </div>
+
+            <!-- Live result -->
+            <div id="bishop-result"></div>
           </div>
         </div>
       </section>

@@ -16,6 +16,7 @@ function navigateTo(screen) {
   document.getElementById("screen-prenatal-tools").style.display = "none";
   document.getElementById("prenatal-tools-menu").style.display = "none";
   document.getElementById("tool-bmi").style.display = "none";
+  document.getElementById("tool-bishop").style.display = "none";
 
   // Hide clear button by default
   document.getElementById("clear-btn").style.display = "none";
@@ -44,6 +45,9 @@ function navigateTo(screen) {
   } else if (screen === "bmi") {
     document.getElementById("screen-prenatal-tools").style.display = "block";
     document.getElementById("tool-bmi").style.display = "block";
+  } else if (screen === "bishop") {
+    document.getElementById("screen-prenatal-tools").style.display = "block";
+    document.getElementById("tool-bishop").style.display = "block";
   }
 }
 
@@ -1237,4 +1241,81 @@ function clearBMI() {
   document.getElementById("height-cm").value = "";
   document.getElementById("weight-kg").value = "";
   document.getElementById("bmi-result").innerHTML = "";
+}
+
+// =====================
+// BISHOP SCORE CALCULATOR
+// Real-time scoring — updates as each component is tapped
+// No calculate button needed
+// =====================
+
+const bishopScores = {
+  dilation: null,
+  effacement: null,
+  station: null,
+  consistency: null,
+  position: null
+};
+
+function setBishop(component, score, btn) {
+  // Update score
+  bishopScores[component] = score;
+
+  // Update button styles for this row
+  const row = btn.parentElement;
+  row.querySelectorAll(".bishop-btn").forEach((b) => b.classList.remove("selected"));
+  btn.classList.add("selected");
+
+  // Update result
+  updateBishopResult();
+}
+
+function updateBishopResult() {
+  const scores = Object.values(bishopScores);
+  const answered = scores.filter((s) => s !== null).length;
+
+  // Don't show result until all components scored
+  if (answered < 5) {
+    document.getElementById("bishop-result").innerHTML = `
+            <div class="result">
+                <p>Score</p>
+                <p class="edd">—</p>
+                <p class="ga">${answered} of 5 components scored</p>
+            </div>
+        `;
+    return;
+  }
+
+  const total = scores.reduce((sum, s) => sum + Number(s), 0);
+
+  let interpretation, flagClass;
+  if (total >= 8) {
+    interpretation = "Favorable — cervix ripe for induction";
+    flagClass = "flag-green";
+  } else if (total >= 6) {
+    interpretation = "Borderline";
+    flagClass = "flag-amber";
+  } else {
+    interpretation = "Unfavorable — cervix not ripe";
+    flagClass = "flag";
+  }
+
+  document.getElementById("bishop-result").innerHTML = `
+        <div class="result">
+            <p>Bishop Score</p>
+            <p class="edd">${total} / 13</p>
+        </div>
+        <div class="${flagClass}">${interpretation}</div>
+    `;
+}
+
+function clearBishop() {
+  // Reset all scores
+  Object.keys(bishopScores).forEach((k) => (bishopScores[k] = null));
+
+  // Remove selected class from all buttons
+  document.querySelectorAll(".bishop-btn").forEach((b) => b.classList.remove("selected"));
+
+  // Clear result
+  document.getElementById("bishop-result").innerHTML = "";
 }
