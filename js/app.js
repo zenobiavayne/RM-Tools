@@ -18,6 +18,9 @@ function navigateTo(screen) {
   document.getElementById("tool-bmi").style.display = "none";
   document.getElementById("tool-bishop").style.display = "none";
   document.getElementById("tool-asa").style.display = "none";
+  document.getElementById("screen-intrapartum").style.display = "none";
+  document.getElementById("intrapartum-menu").style.display = "none";
+  document.getElementById("tool-contractions").style.display = "none";
 
   // Hide clear button by default
   document.getElementById("clear-btn").style.display = "none";
@@ -52,6 +55,12 @@ function navigateTo(screen) {
   } else if (screen === "asa") {
     document.getElementById("screen-prenatal-tools").style.display = "block";
     document.getElementById("tool-asa").style.display = "block";
+  } else if (screen === "intrapartum") {
+    document.getElementById("screen-intrapartum").style.display = "block";
+    document.getElementById("intrapartum-menu").style.display = "block";
+  } else if (screen === "contractions") {
+    document.getElementById("screen-intrapartum").style.display = "block";
+    document.getElementById("tool-contractions").style.display = "block";
   }
 }
 
@@ -563,6 +572,9 @@ function clearAll() {
   document.getElementById("lookup-weeks").value = "";
   document.getElementById("lookup-days").value = "";
   document.getElementById("ga-lookup-result").innerHTML = "";
+
+  // Reset contraction timer
+  clearContractions();
 
   // Reopen calculator
   document.getElementById("calculator-section").style.display = "block";
@@ -1516,4 +1528,147 @@ function updateASA() {
 function clearASA() {
   document.querySelectorAll(".asa-high, .asa-moderate").forEach((b) => (b.checked = false));
   document.getElementById("asa-result").innerHTML = "";
+}
+
+// =====================
+// CONTRACTION TIMER
+// Tracks contraction duration and frequency
+// Live timer counts up during active contraction
+// Logs up to 20 contractions with averages
+// =====================
+
+let contractionActive = false;
+let contractionStartTime = null;
+let lastContractionStartTime = null;
+let contractionTimerInterval = null;
+let contractions = [];
+const MAX_CONTRACTIONS = 20;
+
+function toggleContraction() {
+  if (!contractionActive) {
+    // Starting a contraction
+    contractionActive = true;
+    contractionStartTime = new Date();
+
+    // Update button
+    const btn = document.getElementById("contraction-btn");
+    btn.textContent = "Contraction Ending";
+    btn.classList.add("active");
+
+    // Update label
+    document.getElementById("timer-label").textContent = "Contraction active";
+
+    // Start live timer
+    contractionTimerInterval = setInterval(updateContractionClock, 100);
+  } else {
+    // Ending a contraction
+    contractionActive = false;
+    const endTime = new Date();
+    const duration = Math.round((endTime - contractionStartTime) / 1000);
+
+    // Calculate frequency from last contraction start
+    let frequency = null;
+    if (lastContractionStartTime) {
+      frequency = Math.round((contractionStartTime - lastContractionStartTime) / 1000);
+    }
+
+    // Store this contraction start time for next frequency calc
+    lastContractionStartTime = contractionStartTime;
+
+    // Add to log
+    contractions.unshift({ duration, frequency });
+
+    // Trim to max
+    if (contractions.length > MAX_CONTRACTIONS) {
+      contractions = contractions.slice(0, MAX_CONTRACTIONS);
+    }
+
+    // Stop timer
+    clearInterval(contractionTimerInterval);
+
+    // Update button
+    const btn = document.getElementById("contraction-btn");
+    btn.textContent = "Contraction Starting";
+    btn.classList.remove("active");
+
+    // Update display
+    document.getElementById("timer-label").textContent = "Last duration";
+    document.getElementById("timer-clock").textContent = formatSeconds(duration);
+
+    // Update log and averages
+    updateContractionLog();
+    updateContractionAverages();
+  }
+}
+
+function updateContractionClock() {
+  const now = new Date();
+  const elapsed = Math.round((now - contractionStartTime) / 1000);
+  document.getElementById("timer-clock").textContent = formatSeconds(elapsed);
+}
+
+function formatSeconds(totalSeconds) {
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
+}
+
+function updateContractionLog() {
+  const log = document.getElementById("contraction-log");
+
+  if (contractions.length === 0) {
+    log.innerHTML = "";
+    return;
+  }
+
+  let html = '<div style="margin-top: 16px;">';
+  contractions.forEach((c, i) => {
+    const number = contractions.length - i;
+    const frequency = c.frequency ? `Every ${formatSeconds(c.frequency)}` : "—";
+    html += `
+            <div class="contraction-log-item">
+                <span class="log-number">#${number}</span>
+                <span class="log-duration">${formatSeconds(c.duration)}</span>
+                <span class="log-frequency">${frequency}</span>
+            </div>
+        `;
+  });
+  html += "</div>";
+  log.innerHTML = html;
+}
+
+function updateContractionAverages() {
+  if (contractions.length < 2) return;
+
+  // Average duration
+  const avgDuration = Math.round(contractions.reduce((sum, c) => sum + c.duration, 0) / contractions.length);
+
+  // Average frequency — only contractions that have a frequency value
+  const withFrequency = contractions.filter((c) => c.frequency !== null);
+  const avgFrequency =
+    withFrequency.length > 0
+      ? Math.round(withFrequency.reduce((sum, c) => sum + c.frequency, 0) / withFrequency.length)
+      : null;
+
+  document.getElementById("avg-duration").textContent = formatSeconds(avgDuration);
+  document.getElementById("avg-frequency").textContent = avgFrequency ? `Every ${formatSeconds(avgFrequency)}` : "—";
+
+  document.getElementById("contraction-averages").style.display = "block";
+}
+
+function clearContractions() {
+  // Stop any active timer
+  clearInterval(contractionTimerInterval);
+  contractionActive = false;
+  contractionStartTime = null;
+  lastContractionStartTime = null;
+  contractions = [];
+
+  // Reset UI
+  document.getElementById("contraction-btn").textContent = "Contraction Starting";
+  document.getElementById("contraction-btn").classList.remove("active");
+  document.getElementById("timer-label").textContent = "Ready";
+  document.getElementById("timer-clock").textContent = "0:00";
+  document.getElementById("contraction-log").innerHTML = "";
+  document.getElementById("contraction-averages").style.display = "none";
 }
