@@ -942,3 +942,87 @@ Title and clear button on same line
   margin-top: 8px;
   font-style: italic;
 }
+
+/* =====================
+   CONTRACTION TIMER
+   ===================== */
+
+.contraction-timer-display {
+  text-align: center;
+  padding: 24px 0;
+  margin-bottom: 16px;
+}
+
+.timer-label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.timer-clock {
+  color: var(--accent);
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+
+.contraction-btn {
+  width: 100%;
+  background-color: var(--accent);
+  color: #1a1a2e;
+  border: none;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+  margin-bottom: 16px;
+}
+
+.contraction-btn.active {
+  background-color: #ef4444;
+  color: white;
+}
+
+.contraction-btn:active {
+  transform: scale(0.98);
+}
+
+.contraction-log-item {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 8px;
+}
+
+.contraction-log-item:last-child {
+  border-bottom: none;
+}
+
+.log-number {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 24px;
+}
+
+.log-duration {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.log-frequency {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-align: right;
+}

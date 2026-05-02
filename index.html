@@ -65,6 +65,14 @@
             </div>
           </button>
 
+          <button class="home-tool-btn" onclick="navigateTo('intrapartum')">
+            <span class="tool-icon">⏱️</span>
+            <div class="tool-info">
+              <span class="tool-name">Intrapartum Tools</span>
+              <span class="tool-desc">Contraction timer and more</span>
+            </div>
+          </button>
+
           <button class="home-tool-btn" onclick="navigateTo('newborn')">
             <span class="tool-icon">👶</span>
             <div class="tool-info">
@@ -433,6 +441,64 @@
           <div id="weight-loss-result"></div>
         </div>
       </div>
+
+      <!-- =====================
+     INTRAPARTUM TOOLS
+     ===================== -->
+      <section id="screen-intrapartum" style="display: none">
+        <!-- Intrapartum Tools Menu -->
+        <div id="intrapartum-menu">
+          <div class="home-buttons">
+            <button class="home-tool-btn" onclick="navigateTo('contractions')">
+              <span class="tool-icon">🌊</span>
+              <div class="tool-info">
+                <span class="tool-name">Contraction Timer</span>
+                <span class="tool-desc">Track frequency and duration</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Contraction Timer -->
+        <div id="tool-contractions" style="display: none">
+          <button class="back-btn" onclick="navigateTo('intrapartum')">← Intrapartum Tools</button>
+
+          <div class="calculator-card">
+            <div class="card-header-row">
+              <h3>Contraction Timer</h3>
+              <button class="clear-card-btn" onclick="clearContractions()">Clear</button>
+            </div>
+
+            <!-- Live timer display -->
+            <div class="contraction-timer-display" id="contraction-timer-display">
+              <p class="timer-label" id="timer-label">Ready</p>
+              <p class="timer-clock" id="timer-clock">0:00</p>
+            </div>
+
+            <!-- Main toggle button -->
+            <button class="contraction-btn" id="contraction-btn" onclick="toggleContraction()">
+              Contraction Starting
+            </button>
+
+            <!-- Averages - hidden until enough data -->
+            <div id="contraction-averages" style="display: none">
+              <div class="result" style="margin-top: 16px">
+                <div class="result-row" style="border-bottom: none">
+                  <span class="method">Avg Duration</span>
+                  <span class="edd-date" id="avg-duration">—</span>
+                </div>
+                <div class="result-row" style="border-bottom: none">
+                  <span class="method">Avg Frequency</span>
+                  <span class="edd-date" id="avg-frequency">—</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contraction log -->
+            <div id="contraction-log"></div>
+          </div>
+        </div>
+      </section>
 
       <!-- =====================
          DUE DATE CALCULATOR
