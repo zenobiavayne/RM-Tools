@@ -17,6 +17,7 @@ function navigateTo(screen) {
   document.getElementById("prenatal-tools-menu").style.display = "none";
   document.getElementById("tool-bmi").style.display = "none";
   document.getElementById("tool-bishop").style.display = "none";
+  document.getElementById("tool-asa").style.display = "none";
 
   // Hide clear button by default
   document.getElementById("clear-btn").style.display = "none";
@@ -48,6 +49,9 @@ function navigateTo(screen) {
   } else if (screen === "bishop") {
     document.getElementById("screen-prenatal-tools").style.display = "block";
     document.getElementById("tool-bishop").style.display = "block";
+  } else if (screen === "asa") {
+    document.getElementById("screen-prenatal-tools").style.display = "block";
+    document.getElementById("tool-asa").style.display = "block";
   }
 }
 
@@ -556,6 +560,9 @@ function clearAll() {
   document.getElementById("care-timeline").style.display = "none";
   document.getElementById("share-row").style.display = "none";
   document.getElementById("timeline-ga-display").textContent = "";
+  document.getElementById("lookup-weeks").value = "";
+  document.getElementById("lookup-days").value = "";
+  document.getElementById("ga-lookup-result").innerHTML = "";
 
   // Reopen calculator
   document.getElementById("calculator-section").style.display = "block";
@@ -895,6 +902,58 @@ function generateSchedule() {
   scheduleHTML += "</div>";
   output.innerHTML = scheduleHTML;
   document.getElementById("share-row").style.display = "flex";
+}
+
+// =====================
+// GA DATE LOOKUP
+// Reverse GA calculation - given a working EDD, find the date
+// for a specific gestational age
+// Useful for booking BPP/NST at 41w, induction at 41w3d etc.
+// Requires a working EDD to be set in the Care Timeline
+// Updates in real time as weeks and days are entered
+// =====================
+
+function lookupGADate() {
+  // Need a working EDD first
+  if (!workingEDD) return;
+
+  const weeks = parseInt(document.getElementById("lookup-weeks").value) || 0;
+  const days = parseInt(document.getElementById("lookup-days").value) || 0;
+
+  // Clear result if both fields empty
+  if (!document.getElementById("lookup-weeks").value && !document.getElementById("lookup-days").value) {
+    document.getElementById("ga-lookup-result").innerHTML = "";
+    return;
+  }
+
+  // Calculate LMP from working EDD
+  const lmp = new Date(workingEDD.getTime() - 280 * 24 * 60 * 60 * 1000);
+
+  // Add weeks and days to LMP to get target date
+  const totalDays = weeks * 7 + days;
+  const targetDate = new Date(lmp.getTime() + totalDays * 24 * 60 * 60 * 1000);
+
+  // Calculate how far away that date is from today
+  const today = new Date();
+  const diffMs = targetDate - today;
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+
+  let timeAway;
+  if (diffDays === 0) {
+    timeAway = "today";
+  } else if (diffDays > 0) {
+    timeAway = `in ${diffDays} days`;
+  } else {
+    timeAway = `${Math.abs(diffDays)} days ago`;
+  }
+
+  document.getElementById("ga-lookup-result").innerHTML = `
+        <div class="result">
+            <p>${weeks}w${days}d</p>
+            <p class="edd">${targetDate.toLocaleDateString("en-CA", { weekday: "long" })}, ${formatDate(targetDate)}</p>
+            <p class="ga">${timeAway}</p>
+        </div>
+    `;
 }
 
 // =====================
@@ -1244,6 +1303,94 @@ function clearBMI() {
 }
 
 // =====================
+// LIVE WEIGHT CONVERSION
+// Fires on every keystroke via oninput
+// Converts weight instantly without needing to tap Calculate
+// Imperial mode: lbs → kg
+// Metric mode: kg → lbs
+// =====================
+function convertWeight() {
+  if (bmiUnit === "imperial") {
+    // Grab the lbs value from the input
+    const lbs = parseFloat(document.getElementById("weight-lbs").value);
+
+    // If empty, clear the conversion display and exit
+    if (!lbs) {
+      document.getElementById("weight-imperial-converted").textContent = "";
+      return;
+    }
+
+    // Convert lbs to kg and round to 1 decimal place
+    const kg = Math.round(lbs * 0.453592 * 10) / 10;
+
+    // Display inline below the input
+    document.getElementById("weight-imperial-converted").textContent = `→ ${kg} kg`;
+  } else {
+    // Grab the kg value from the input
+    const kg = parseFloat(document.getElementById("weight-kg").value);
+
+    // If empty, clear the conversion display and exit
+    if (!kg) {
+      document.getElementById("weight-metric-converted").textContent = "";
+      return;
+    }
+
+    // Convert kg to lbs and round to 1 decimal place
+    const lbs = Math.round(kg * 2.20462 * 10) / 10;
+
+    // Display inline below the input
+    document.getElementById("weight-metric-converted").textContent = `→ ${lbs} lbs`;
+  }
+}
+
+// =====================
+// LIVE HEIGHT CONVERSION
+// Fires on every keystroke via oninput
+// Converts height instantly without needing to tap Calculate
+// Imperial mode: ft/in → cm
+// Metric mode: cm → ft/in
+// =====================
+function convertHeight() {
+  if (bmiUnit === "imperial") {
+    // Grab ft and in values — default to 0 if empty
+    const ft = parseFloat(document.getElementById("height-ft").value) || 0;
+    const inches = parseFloat(document.getElementById("height-in").value) || 0;
+
+    // If both are empty, clear the conversion display and exit
+    if (!ft && !inches) {
+      document.getElementById("height-imperial-converted").textContent = "";
+      return;
+    }
+
+    // Convert total inches to cm and round to 1 decimal place
+    const totalInches = ft * 12 + inches;
+    const cm = Math.round(totalInches * 2.54 * 10) / 10;
+
+    // Display inline below the inputs
+    document.getElementById("height-imperial-converted").textContent = `→ ${cm} cm`;
+  } else {
+    // Grab the cm value from the input
+    const cm = parseFloat(document.getElementById("height-cm").value);
+
+    // If empty, clear the conversion display and exit
+    if (!cm) {
+      document.getElementById("height-metric-converted").textContent = "";
+      return;
+    }
+
+    // Convert cm to ft and inches
+    const totalInches = cm / 2.54;
+    const heightFt = Math.floor(totalInches / 12);
+
+    // Round inches to 1 decimal place
+    const heightIn = Math.round((totalInches % 12) * 10) / 10;
+
+    // Display inline below the input
+    document.getElementById("height-metric-converted").textContent = `→ ${heightFt}ft ${heightIn}in`;
+  }
+}
+
+// =====================
 // BISHOP SCORE CALCULATOR
 // Real-time scoring — updates as each component is tapped
 // No calculate button needed
@@ -1318,4 +1465,55 @@ function clearBishop() {
 
   // Clear result
   document.getElementById("bishop-result").innerHTML = "";
+}
+
+// =====================
+// ASA DECISION TOOL
+// SOGC Guideline No. 426 (2022)
+// High risk: any ONE factor = recommend ASA
+// Moderate risk: TWO or more factors = recommend ASA
+// Updates in real time as checkboxes are ticked
+// =====================
+
+function updateASA() {
+  const highBoxes = document.querySelectorAll(".asa-high");
+  const moderateBoxes = document.querySelectorAll(".asa-moderate");
+
+  const highCount = [...highBoxes].filter((b) => b.checked).length;
+  const moderateCount = [...moderateBoxes].filter((b) => b.checked).length;
+
+  const result = document.getElementById("asa-result");
+
+  // Nothing checked
+  if (highCount === 0 && moderateCount === 0) {
+    result.innerHTML = "";
+    return;
+  }
+
+  if (highCount >= 1) {
+    result.innerHTML = `
+            <div class="flag-green">
+                ✅ ASA recommended — high risk factor present
+            </div>
+            <p class="asa-dosing">ASA 162mg (2 × 81mg) daily at bedtime, initiated between 12–16 weeks</p>
+        `;
+  } else if (moderateCount >= 2) {
+    result.innerHTML = `
+            <div class="flag-green">
+                ✅ ASA recommended — two or more moderate risk factors present
+            </div>
+            <p class="asa-dosing">ASA 162mg (2 × 81mg) daily at bedtime, initiated between 12–16 weeks</p>
+        `;
+  } else if (moderateCount === 1) {
+    result.innerHTML = `
+            <div class="flag-amber">
+                ⚠ Single moderate risk factor — ASA not indicated per SOGC
+            </div>
+        `;
+  }
+}
+
+function clearASA() {
+  document.querySelectorAll(".asa-high, .asa-moderate").forEach((b) => (b.checked = false));
+  document.getElementById("asa-result").innerHTML = "";
 }
