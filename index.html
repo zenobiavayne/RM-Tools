@@ -72,14 +72,6 @@
               <span class="tool-desc">Neonatal clinical calculators and tools</span>
             </div>
           </button>
-
-          <button class="home-tool-btn coming-soon">
-            <span class="tool-icon">💊</span>
-            <div class="tool-info">
-              <span class="tool-name">ASA Decision Tree</span>
-              <span class="tool-desc">Coming soon</span>
-            </div>
-          </button>
         </div>
       </section>
 
@@ -168,6 +160,14 @@
                 <span class="tool-desc">Cervical favorability for induction</span>
               </div>
             </button>
+
+            <button class="home-tool-btn" onclick="navigateTo('asa')">
+              <span class="tool-icon">💊</span>
+              <div class="tool-info">
+                <span class="tool-name">ASA Decision Tool</span>
+                <span class="tool-desc">Preeclampsia prevention — SOGC 2022</span>
+              </div>
+            </button>
           </div>
         </div>
 
@@ -198,26 +198,30 @@
               <label>Height</label>
               <div class="ga-input-row">
                 <div class="ga-input-group">
-                  <input type="number" id="height-ft" min="0" max="8" placeholder="ft" />
+                  <input type="number" id="height-ft" min="0" max="8" placeholder="ft" oninput="convertHeight()" />
                   <span class="ga-label">ft</span>
                 </div>
                 <div class="ga-input-group">
-                  <input type="number" id="height-in" min="0" max="11" placeholder="in" />
+                  <input type="number" id="height-in" min="0" max="11" placeholder="in" oninput="convertHeight()" />
                   <span class="ga-label">in</span>
                 </div>
               </div>
+              <p class="conversion-display" id="height-imperial-converted"></p>
 
               <label for="weight-lbs">Weight</label>
-              <input type="number" id="weight-lbs" placeholder="lbs" />
+              <input type="number" id="weight-lbs" placeholder="lbs" oninput="convertWeight()" />
+              <p class="conversion-display" id="weight-imperial-converted"></p>
             </div>
 
             <!-- Metric inputs -->
             <div id="bmi-input-metric" style="display: none">
               <label for="height-cm">Height</label>
-              <input type="number" id="height-cm" placeholder="cm" />
+              <input type="number" id="height-cm" placeholder="cm" oninput="convertHeight()" />
+              <p class="conversion-display" id="height-metric-converted"></p>
 
               <label for="weight-kg">Weight</label>
-              <input type="number" id="weight-kg" placeholder="kg" />
+              <input type="number" id="weight-kg" placeholder="kg" oninput="convertWeight()" />
+              <p class="conversion-display" id="weight-metric-converted"></p>
             </div>
 
             <button onclick="calculateBMI()">Calculate BMI</button>
@@ -284,7 +288,90 @@
             <div id="bishop-result"></div>
           </div>
         </div>
+
+        <!-- ASA Decision Tool -->
+        <div id="tool-asa" style="display: none">
+          <button class="back-btn" onclick="navigateTo('prenatal-tools')">← Prenatal Tools</button>
+
+          <div class="calculator-card">
+            <div class="card-header-row">
+              <h3>ASA Decision Tool</h3>
+              <button class="clear-card-btn" onclick="clearASA()">Clear</button>
+            </div>
+            <p class="tool-intro">SOGC Guideline No. 426 (2022) — Preeclampsia Prevention</p>
+
+            <!-- High risk factors -->
+            <div class="asa-section">
+              <p class="asa-section-title">High Risk Factors</p>
+              <p class="asa-section-subtitle">ASA recommended if ANY ONE is present</p>
+
+              <label class="asa-item">
+                <input type="checkbox" class="asa-high" onchange="updateASA()" />
+                <span>Prior preeclampsia</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-high" onchange="updateASA()" />
+                <span>Pre-pregnancy BMI &gt;30 kg/m²</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-high" onchange="updateASA()" />
+                <span>Chronic hypertension</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-high" onchange="updateASA()" />
+                <span>Pre-gestational diabetes mellitus</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-high" onchange="updateASA()" />
+                <span>Chronic kidney disease</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-high" onchange="updateASA()" />
+                <span>SLE / antiphospholipid antibody syndrome</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-high" onchange="updateASA()" />
+                <span>Assisted reproductive therapy</span>
+              </label>
+            </div>
+
+            <!-- Moderate risk factors -->
+            <div class="asa-section">
+              <p class="asa-section-title">Moderate Risk Factors</p>
+              <p class="asa-section-subtitle">ASA recommended if TWO OR MORE are present</p>
+
+              <label class="asa-item">
+                <input type="checkbox" class="asa-moderate" onchange="updateASA()" />
+                <span>Prior placental abruption</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-moderate" onchange="updateASA()" />
+                <span>Prior stillbirth</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-moderate" onchange="updateASA()" />
+                <span>Prior fetal growth restriction</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-moderate" onchange="updateASA()" />
+                <span>Age &gt;40 years</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-moderate" onchange="updateASA()" />
+                <span>Nulliparity</span>
+              </label>
+              <label class="asa-item">
+                <input type="checkbox" class="asa-moderate" onchange="updateASA()" />
+                <span>Multifetal pregnancy</span>
+              </label>
+            </div>
+
+            <!-- Live result -->
+            <div id="asa-result"></div>
+          </div>
+        </div>
       </section>
+
       <!-- Weight Loss Calculator -->
       <div id="tool-weight-loss" style="display: none">
         <button class="back-btn" onclick="navigateTo('newborn')">← Newborn Tools</button>
@@ -484,6 +571,27 @@
 
         <!-- Generated schedule -->
         <div id="schedule-output"></div>
+
+        <!-- Custom GA date lookup -->
+        <div class="calculator-card" id="ga-lookup" style="margin-top: 16px">
+          <h3>Date Lookup</h3>
+          <p class="tool-intro">Find the date for a specific gestational age</p>
+
+          <label>Gestational Age</label>
+          <div class="ga-input-row">
+            <div class="ga-input-group">
+              <input type="number" id="lookup-weeks" min="0" max="45" placeholder="Weeks" oninput="lookupGADate()" />
+              <span class="ga-label">weeks</span>
+            </div>
+            <div class="ga-input-group">
+              <input type="number" id="lookup-days" min="0" max="6" placeholder="Days" oninput="lookupGADate()" />
+              <span class="ga-label">days</span>
+            </div>
+          </div>
+
+          <div id="ga-lookup-result"></div>
+        </div>
+
         <!-- Share/Copy buttons -->
         <!-- Only visible once a schedule has been generated -->
         <div class="share-row" id="share-row" style="display: none">
