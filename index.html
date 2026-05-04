@@ -13,6 +13,47 @@
     <meta name="apple-mobile-web-app-title" content="RM Tools" />
   </head>
   <body>
+    <!-- ===== DISCLAIMER POPUP ===== -->
+    <!-- Shows on first visit, stored in localStorage so it only appears once -->
+    <!-- Covers the whole screen until dismissed -->
+    <div id="disclaimer-overlay" class="disclaimer-overlay">
+      <div class="disclaimer-box">
+        <h2 class="disclaimer-title">RM Tools</h2>
+        <p class="disclaimer-subtitle">Clinical Support Tools for Registered Midwives</p>
+
+        <div class="disclaimer-body">
+          <p>These tools are designed to support registered midwives in clinical practice.</p>
+
+          <p><strong>Important:</strong></p>
+          <ul>
+            <li>These tools are clinical aids, not substitutes for professional judgment</li>
+            <li>All clinical decisions remain the sole responsibility of the treating clinician</li>
+            <li>Calculators should be verified against current evidence and local guidelines</li>
+            <li>These tools are not a substitute for formal clinical training or supervision</li>
+          </ul>
+
+          <p>
+            <strong>Liability:</strong><br />
+            These tools are provided as-is, without warranty of any kind. The developer accepts no liability for
+            clinical decisions made using these tools.
+          </p>
+
+          <p>
+            <strong>Feedback:</strong><br />
+            Found an error or have a suggestion? Visit
+            <a href="https://github.com/AshleyMidwife" target="_blank">github.com/AshleyMidwife</a>
+          </p>
+
+          <p class="disclaimer-acknowledgement">
+            By using this app you acknowledge that you are a regulated health professional or supervised trainee using
+            this tool in a professional capacity.
+          </p>
+        </div>
+
+        <button class="disclaimer-btn" onclick="dismissDisclaimer()">I Understand — Continue to App</button>
+      </div>
+    </div>
+
     <header>
       <div class="header-left">
         <!-- Home icon and title both navigate to home screen -->
@@ -27,10 +68,67 @@
           <option value="ON">ON</option>
         </select>
         <button class="clear-btn" id="clear-btn" onclick="clearAll()" style="display: none">Clear</button>
+        <!-- About button - always visible in header -->
+        <button class="about-btn" onclick="navigateTo('screen-about')">About</button>
       </div>
     </header>
 
     <main>
+      <!-- ===== ABOUT SCREEN ===== -->
+      <section id="screen-about" style="display: none">
+        <h2 class="screen-title">About RM Tools</h2>
+
+        <section class="note-section">
+          <h3 class="section-title">Clinical Support Tools for Registered Midwives</h3>
+          <p style="color: #f1f5f9; line-height: 1.6; margin-bottom: 12px">
+            These tools are designed to support registered midwives in clinical practice.
+          </p>
+          <p style="color: #f59e0b; font-weight: 700; margin-bottom: 4px">Important</p>
+          <ul style="color: #f1f5f9; line-height: 1.8; margin-left: 16px; margin-bottom: 12px">
+            <li>These tools are clinical aids, not substitutes for professional judgment</li>
+            <li>All clinical decisions remain the sole responsibility of the treating clinician</li>
+            <li>Calculators should be verified against current evidence and local guidelines</li>
+            <li>These tools are not a substitute for formal clinical training or supervision</li>
+          </ul>
+          <p style="color: #f59e0b; font-weight: 700; margin-bottom: 4px">Liability</p>
+          <p style="color: #f1f5f9; line-height: 1.6; margin-bottom: 12px">
+            These tools are provided as-is, without warranty of any kind. The developer accepts no liability for
+            clinical decisions made using these tools.
+          </p>
+          <p style="color: #f59e0b; font-weight: 700; margin-bottom: 4px">Feedback</p>
+          <p style="color: #f1f5f9; line-height: 1.6; margin-bottom: 12px">
+            Found an error or have a suggestion? Visit
+            <a href="https://github.com/AshleyMidwife" target="_blank" style="color: #f59e0b"
+              >github.com/AshleyMidwife</a
+            >
+          </p>
+          <p style="color: #94a3b8; font-style: italic; line-height: 1.6; margin-top: 16px">
+            By using this app you acknowledge that you are a regulated health professional or supervised trainee using
+            this tool in a professional capacity.
+          </p>
+        </section>
+
+        <section class="note-section">
+          <h3 class="section-title">License</h3>
+          <p style="color: #f1f5f9; line-height: 1.6">
+            RM Tools is open source software released under the MIT License.<br />
+            <a href="https://github.com/AshleyMidwife/RM-Tools" target="_blank" style="color: #f59e0b"
+              >github.com/AshleyMidwife/RM-Tools</a
+            >
+          </p>
+        </section>
+
+        <section class="note-section">
+          <h3 class="section-title">Companion App</h3>
+          <p style="color: #f1f5f9; line-height: 1.6">
+            Looking for documentation templates? Check out RM Notes:<br />
+            <a href="https://ashleymidwife.github.io/RM-Notes/" target="_blank" style="color: #f59e0b"
+              >ashleymidwife.github.io/RM-Notes</a
+            >
+          </p>
+        </section>
+      </section>
+
       <!-- =====================
      HOME SCREEN
      Landing page with tool buttons
