@@ -1026,3 +1026,127 @@ Title and clear button on same line
   font-size: 0.85rem;
   text-align: right;
 }
+
+/* ===== DISCLAIMER POPUP ===== */
+
+/* Full screen overlay - sits on top of everything */
+.disclaimer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Semi-transparent dark background */
+  background-color: rgba(0, 0, 0, 0.85);
+  /* Stack above everything else */
+  z-index: 1000;
+  /* Center the disclaimer box */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Hidden state - JavaScript adds this class when dismissed */
+.disclaimer-overlay.hidden {
+  display: none;
+}
+
+/* The white card containing the disclaimer text */
+.disclaimer-box {
+  background-color: #2a2a3e;
+  border: 1px solid #3a3a5c;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 500px;
+  width: 100%;
+  /* Scrollable if content is taller than screen */
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.disclaimer-title {
+  color: #f59e0b;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.disclaimer-subtitle {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #3a3a5c;
+}
+
+.disclaimer-body {
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.disclaimer-body p {
+  margin-bottom: 12px;
+}
+
+.disclaimer-body ul {
+  margin-left: 16px;
+  margin-bottom: 12px;
+}
+
+.disclaimer-body ul li {
+  margin-bottom: 6px;
+}
+
+.disclaimer-body a {
+  color: #f59e0b;
+}
+
+/* The acknowledgement line at the bottom - italic and slightly muted */
+.disclaimer-acknowledgement {
+  color: #94a3b8;
+  font-style: italic;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #3a3a5c;
+}
+
+/* The dismiss button */
+.disclaimer-btn {
+  width: 100%;
+  background-color: #f59e0b;
+  color: #1e1e2e;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+}
+
+.disclaimer-btn:hover {
+  background-color: #d97706;
+}
+
+/* ===== ABOUT BUTTON IN HEADER ===== */
+.about-btn {
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f59e0b;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.about-btn:hover {
+  background-color: #3a3a5c;
+  color: #d97706;
+}

@@ -21,6 +21,7 @@ function navigateTo(screen) {
   document.getElementById("screen-intrapartum").style.display = "none";
   document.getElementById("intrapartum-menu").style.display = "none";
   document.getElementById("tool-contractions").style.display = "none";
+  document.getElementById("screen-about").style.display = "none";
 
   // Hide clear button by default
   document.getElementById("clear-btn").style.display = "none";
@@ -61,6 +62,8 @@ function navigateTo(screen) {
   } else if (screen === "contractions") {
     document.getElementById("screen-intrapartum").style.display = "block";
     document.getElementById("tool-contractions").style.display = "block";
+  } else if (screen === "screen-about") {
+    document.getElementById("screen-about").style.display = "block";
   }
 }
 
@@ -1672,3 +1675,30 @@ function clearContractions() {
   document.getElementById("contraction-log").innerHTML = "";
   document.getElementById("contraction-averages").style.display = "none";
 }
+
+// ===== DISCLAIMER =====
+
+// dismissDisclaimer() - hides the disclaimer overlay and stores
+// the dismissal in localStorage so it doesn't show again
+function dismissDisclaimer() {
+  // Hide the overlay by adding the hidden class
+  document.getElementById("disclaimer-overlay").classList.add("hidden");
+
+  // Store dismissal in localStorage so it doesn't show again
+  // localStorage persists across sessions — survives closing the browser
+  localStorage.setItem("rm-tools-disclaimer-accepted", "true");
+}
+
+// checkDisclaimer() - runs on page load to decide whether
+// to show the disclaimer or not
+function checkDisclaimer() {
+  const accepted = localStorage.getItem("rm-tools-disclaimer-accepted");
+
+  if (accepted) {
+    // Already accepted - hide overlay immediately
+    document.getElementById("disclaimer-overlay").classList.add("hidden");
+  }
+}
+
+// Run disclaimer check when page finishes loading
+window.addEventListener("load", checkDisclaimer);
